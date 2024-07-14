@@ -194,6 +194,8 @@ obstacle_group = pygame.sprite.Group()
 sky_surface_1 = pygame.image.load('graphics/Sky1.png').convert()
 sky_surface_2 = pygame.image.load('graphics/Sky2.png').convert()
 sky_surface_3 = pygame.image.load('graphics/Sky3.png').convert()
+sky_surface_4 = pygame.image.load('graphics/Sky4.png').convert()
+
 
 #sky_surface = pygame.image.load('graphics/background.png').convert()
 ground_surface = pygame.image.load('graphics/ground.png').convert()
@@ -231,12 +233,14 @@ while True:
 
 	if game_active:
 		# Change the background based on the score
-		if score < 20:
+		if score < 15:
 			screen.blit(sky_surface_1, (0,0))
-		elif score < 40:
+		elif score < 30:
 			screen.blit(sky_surface_2, (0,0))
-		else:
+		elif score < 40:
 			screen.blit(sky_surface_3, (0,0))
+		else:
+			screen.blit(sky_surface_4, (0,0))
 		
 		screen.blit(ground_surface, (0,300))
 		score = display_score()
