@@ -31,14 +31,8 @@ class Player(pygame.sprite.Sprite):
             
             
 		]
-		self.player_walk[0].set_colorkey((0, 0, 0))
-		self.player_walk[1].set_colorkey((0, 0, 0))
-		self.player_walk[2].set_colorkey((0, 0, 0))
-		self.player_walk[3].set_colorkey((0, 0, 0))
-		self.player_walk[4].set_colorkey((0, 0, 0))
-		self.player_walk[5].set_colorkey((0, 0, 0))
-		self.player_walk[6].set_colorkey((0, 0, 0))
-		self.player_walk[7].set_colorkey((0, 0, 0))
+		for i in range(len(self.player_walk)):
+			self.player_walk[i].set_colorkey((0, 0, 0))
 
 
 
@@ -197,7 +191,10 @@ player.add(Player())
 
 obstacle_group = pygame.sprite.Group()
 
-sky_surface = pygame.image.load('graphics/Sky.png').convert()
+sky_surface_1 = pygame.image.load('graphics/Sky1.png').convert()
+sky_surface_2 = pygame.image.load('graphics/Sky2.png').convert()
+sky_surface_3 = pygame.image.load('graphics/Sky3.png').convert()
+
 #sky_surface = pygame.image.load('graphics/background.png').convert()
 ground_surface = pygame.image.load('graphics/ground.png').convert()
 
@@ -233,8 +230,15 @@ while True:
 				start_time = int(pygame.time.get_ticks() / 1000)
 
 	if game_active:
-		screen.blit(sky_surface,(0,0))
-		screen.blit(ground_surface,(0,300))
+		# Change the background based on the score
+		if score < 20:
+			screen.blit(sky_surface_1, (0,0))
+		elif score < 40:
+			screen.blit(sky_surface_2, (0,0))
+		else:
+			screen.blit(sky_surface_3, (0,0))
+		
+		screen.blit(ground_surface, (0,300))
 		score = display_score()
 		
 		player.draw(screen)
