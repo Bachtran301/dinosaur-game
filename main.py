@@ -5,17 +5,43 @@ from random import randint, choice
 class Player(pygame.sprite.Sprite):
 	def __init__(self):
 		super().__init__()
-		player_walk_1 = pygame.image.load('graphics/player/0.png').convert_alpha()
-		player_walk_2 = pygame.image.load('graphics/player/1.png').convert_alpha()
-		player_jump = pygame.image.load('graphics/player/3.png').convert_alpha()
+		player_walk_0 = pygame.image.load('graphics/player/0.png').convert_alpha()
+		player_walk_1 = pygame.image.load('graphics/player/1.png').convert_alpha()
+		player_walk_2 = pygame.image.load('graphics/player/2.png').convert_alpha()
+		player_walk_3 = pygame.image.load('graphics/player/3.png').convert_alpha()
+		player_walk_4 = pygame.image.load('graphics/player/4.png').convert_alpha()
+		player_walk_5 = pygame.image.load('graphics/player/5.png').convert_alpha()
+		player_walk_6 = pygame.image.load('graphics/player/6.png').convert_alpha()
+		player_walk_7 = pygame.image.load('graphics/player/7.png').convert_alpha()
+
+  
+  
+		player_jump = pygame.image.load('graphics/player/jump.png').convert_alpha()
 
 		# Phóng to và đặt màu trong suốt cho hình ảnh
 		self.player_walk = [
-			pygame.transform.scale(player_walk_1, (player_walk_1.get_width() * 3.5, player_walk_1.get_height() * 3.5)),
-            pygame.transform.scale(player_walk_2, (player_walk_2.get_width() * 3.5, player_walk_2.get_height() * 3.5))
+			pygame.transform.scale(player_walk_0, (player_walk_0.get_width() * 3.5, player_walk_0.get_height() * 3.5)),
+            pygame.transform.scale(player_walk_1, (player_walk_1.get_width() * 3.5, player_walk_1.get_height() * 3.5)),
+            pygame.transform.scale(player_walk_2, (player_walk_2.get_width() * 3.5, player_walk_2.get_height() * 3.5)),
+            pygame.transform.scale(player_walk_3, (player_walk_3.get_width() * 3.5, player_walk_3.get_height() * 3.5)),
+            pygame.transform.scale(player_walk_4, (player_walk_4.get_width() * 3.5, player_walk_4.get_height() * 3.5)),
+            pygame.transform.scale(player_walk_5, (player_walk_5.get_width() * 3.5, player_walk_5.get_height() * 3.5)),
+            pygame.transform.scale(player_walk_6, (player_walk_6.get_width() * 3.5, player_walk_6.get_height() * 3.5)),
+            pygame.transform.scale(player_walk_7, (player_walk_7.get_width() * 3.5, player_walk_7.get_height() * 3.5)),
+            
+            
 		]
 		self.player_walk[0].set_colorkey((0, 0, 0))
 		self.player_walk[1].set_colorkey((0, 0, 0))
+		self.player_walk[2].set_colorkey((0, 0, 0))
+		self.player_walk[3].set_colorkey((0, 0, 0))
+		self.player_walk[4].set_colorkey((0, 0, 0))
+		self.player_walk[5].set_colorkey((0, 0, 0))
+		self.player_walk[6].set_colorkey((0, 0, 0))
+		self.player_walk[7].set_colorkey((0, 0, 0))
+
+
+
 		
 		self.player_jump = pygame.transform.scale(player_jump, (player_jump.get_width() * 3.5, player_jump.get_height() * 3.5))
 		self.player_jump.set_colorkey((0, 0, 0))
@@ -95,13 +121,37 @@ class Obstacle(pygame.sprite.Sprite):
 		elif type == 'zombie':
 			FlagZombie_0 = pygame.image.load('graphics/zombie/FlagZombie_0.png').convert_alpha()
 			FlagZombie_1 = pygame.image.load('graphics/zombie/FlagZombie_1.png').convert_alpha()
+			FlagZombie_2 = pygame.image.load('graphics/zombie/FlagZombie_2.png').convert_alpha()
+			FlagZombie_3 = pygame.image.load('graphics/zombie/FlagZombie_3.png').convert_alpha()
+			FlagZombie_4 = pygame.image.load('graphics/zombie/FlagZombie_4.png').convert_alpha()
+			FlagZombie_5 = pygame.image.load('graphics/zombie/FlagZombie_5.png').convert_alpha()
+			FlagZombie_6 = pygame.image.load('graphics/zombie/FlagZombie_6.png').convert_alpha()
+			FlagZombie_7 = pygame.image.load('graphics/zombie/FlagZombie_7.png').convert_alpha()
+			FlagZombie_8 = pygame.image.load('graphics/zombie/FlagZombie_8.png').convert_alpha()
+			FlagZombie_9 = pygame.image.load('graphics/zombie/FlagZombie_9.png').convert_alpha()
+			FlagZombie_10 = pygame.image.load('graphics/zombie/FlagZombie_10.png').convert_alpha()
+			FlagZombie_11 = pygame.image.load('graphics/zombie/FlagZombie_11.png').convert_alpha()
+
+   
 			
 			
 			self.frames = [
-       			pygame.transform.scale(FlagZombie_0, (FlagZombie_0.get_width() * 0.5, FlagZombie_0.get_height() * 0.5)),
-    			pygame.transform.scale(FlagZombie_1, (FlagZombie_1.get_width() * 0.5, FlagZombie_1.get_height() * 0.5)),
+       			pygame.transform.scale(FlagZombie_0, (FlagZombie_0.get_width() * 0.57, FlagZombie_0.get_height() * 0.57)),
+    			pygame.transform.scale(FlagZombie_1, (FlagZombie_1.get_width() * 0.57, FlagZombie_1.get_height() * 0.57)),
+    			pygame.transform.scale(FlagZombie_2, (FlagZombie_2.get_width() * 0.57, FlagZombie_2.get_height() * 0.57)),
+    			pygame.transform.scale(FlagZombie_3, (FlagZombie_3.get_width() * 0.57, FlagZombie_3.get_height() * 0.57)),
+    			pygame.transform.scale(FlagZombie_4, (FlagZombie_4.get_width() * 0.57, FlagZombie_4.get_height() * 0.57)),
+    			pygame.transform.scale(FlagZombie_5, (FlagZombie_5.get_width() * 0.57, FlagZombie_5.get_height() * 0.57)),
+    			pygame.transform.scale(FlagZombie_6, (FlagZombie_6.get_width() * 0.57, FlagZombie_6.get_height() * 0.57)),
+    			pygame.transform.scale(FlagZombie_7, (FlagZombie_7.get_width() * 0.57, FlagZombie_7.get_height() * 0.57)),
+    			pygame.transform.scale(FlagZombie_8, (FlagZombie_8.get_width() * 0.57, FlagZombie_8.get_height() * 0.57)),
+    			pygame.transform.scale(FlagZombie_9, (FlagZombie_9.get_width() * 0.57, FlagZombie_9.get_height() * 0.57)),
+    			pygame.transform.scale(FlagZombie_10, (FlagZombie_10.get_width() * 0.57, FlagZombie_10.get_height() * 0.57)),
+    			pygame.transform.scale(FlagZombie_11, (FlagZombie_11.get_width() * 0.57, FlagZombie_11.get_height() * 0.57)),
+       
+       
 			]
-			y_pos = 300
+			y_pos = 301
 		
 
 		self.animation_index = 0
