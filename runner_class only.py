@@ -5,24 +5,35 @@ from random import randint, choice
 class Player(pygame.sprite.Sprite):
 	def __init__(self):
 		super().__init__()
-		player_walk_1 = pygame.image.load('graphics/player/player_walk_1.png').convert_alpha()
-		player_walk_2 = pygame.image.load('graphics/player/player_walk_2.png').convert_alpha()
-		self.player_walk = [player_walk_1,player_walk_2]
+		player_walk_1 = pygame.image.load('graphics/player/0.png').convert_alpha()
+		player_walk_2 = pygame.image.load('graphics/player/1.png').convert_alpha()
+		player_jump = pygame.image.load('graphics/player/3.png').convert_alpha()
+
+		# Phóng to và đặt màu trong suốt cho hình ảnh
+		self.player_walk = [
+			pygame.transform.scale(player_walk_1, (player_walk_1.get_width() * 3.5, player_walk_1.get_height() * 3.5)),
+            pygame.transform.scale(player_walk_2, (player_walk_2.get_width() * 3.5, player_walk_2.get_height() * 3.5))
+		]
+		self.player_walk[0].set_colorkey((0, 0, 0))
+		self.player_walk[1].set_colorkey((0, 0, 0))
+		
+		self.player_jump = pygame.transform.scale(player_jump, (player_jump.get_width() * 3.5, player_jump.get_height() * 3.5))
+		self.player_jump.set_colorkey((0, 0, 0))
+
 		self.player_index = 0
-		self.player_jump = pygame.image.load('graphics/player/jump.png').convert_alpha()
 
 		self.image = self.player_walk[self.player_index]
 		self.rect = self.image.get_rect(midbottom = (80,300))
 		self.gravity = 0
 
-		self.jump_sound = pygame.mixer.Sound('audio/jump.mp3')
-		self.jump_sound.set_volume(0.5)
+		#self.jump_sound = pygame.mixer.Sound('audio/jump.mp3')
+		#self.jump_sound.set_volume(0.5)
 
 	def player_input(self):
 		keys = pygame.key.get_pressed()
 		if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
 			self.gravity = -20
-			self.jump_sound.play()
+			#self.jump_sound.play()
 
 	def apply_gravity(self):
 		self.gravity += 1
@@ -50,11 +61,18 @@ class Obstacle(pygame.sprite.Sprite):
 		if type == 'fly':
 			fly_1 = pygame.image.load('graphics/fly/fly1.png').convert_alpha()
 			fly_2 = pygame.image.load('graphics/fly/fly2.png').convert_alpha()
-			self.frames = [fly_1,fly_2]
+			self.frames = [
+       			pygame.transform.scale(fly_1, (fly_1.get_width() * 0.8, fly_1.get_height() * 0.8)),
+    			pygame.transform.scale(fly_2, (fly_2.get_width() * 0.8, fly_2.get_height() * 0.8))
+			]
 			y_pos = 210
 		else:
 			snail_1 = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
 			snail_2 = pygame.image.load('graphics/snail/snail2.png').convert_alpha()
+			# self.frames = [
+            # 	pygame.transform.scale(snail_1, (snail_1.get_width() * 3, snail_1.get_height() * 3)),
+            # 	pygame.transform.scale(snail_2, (snail_2.get_width() * 3, snail_2.get_height() * 3))
+        	# ]
 			self.frames = [snail_1,snail_2]
 			y_pos  = 300
 
@@ -92,14 +110,14 @@ def collision_sprite():
 
 pygame.init()
 screen = pygame.display.set_mode((800,400))
-pygame.display.set_caption('Runner')
+pygame.display.set_caption('Ninja Jumper')
 clock = pygame.time.Clock()
 test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
 game_active = False
 start_time = 0
 score = 0
-bg_music = pygame.mixer.Sound('audio/music.wav')
-bg_music.play(loops = -1)
+#bg_music = pygame.mixer.Sound('audio/music.wav')
+#bg_music.play(loops = -1)
 
 #Groups
 player = pygame.sprite.GroupSingle()
@@ -108,17 +126,19 @@ player.add(Player())
 obstacle_group = pygame.sprite.Group()
 
 sky_surface = pygame.image.load('graphics/Sky.png').convert()
+#sky_surface = pygame.image.load('graphics/background.png').convert()
 ground_surface = pygame.image.load('graphics/ground.png').convert()
 
 # Intro screen
 player_stand = pygame.image.load('graphics/player/player_stand.png').convert_alpha()
-player_stand = pygame.transform.rotozoom(player_stand,0,2)
+player_stand = pygame.transform.rotozoom(player_stand,0,5) # Phóng to hình ảnh
+player_stand.set_colorkey((0, 0, 0)) # Đặt màu trong suốt
 player_stand_rect = player_stand.get_rect(center = (400,200))
 
-game_name = test_font.render('Pixel Runner',False,(111,196,169))
+game_name = test_font.render('Runner',False,(111,196,169))
 game_name_rect = game_name.get_rect(center = (400,80))
 
-game_message = test_font.render('Press space to run',False,(111,196,169))
+game_message = test_font.render('Space to run',False,(111,196,169))
 game_message_rect = game_message.get_rect(center = (400,330))
 
 # Timer 
