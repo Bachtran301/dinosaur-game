@@ -1,6 +1,7 @@
 # Games on GitHub <img src="http://i.imgur.com/Cj4rMrS.gif" height="40" alt="Swimming Octocat" title="Games on GitHub">
-
-# Ninja Jumper
+.. image:: https://raw.githubusercontent.com/pygame/pygame/main/docs/reST/_static/pygame_logo.svg
+  :alt: pygame
+  :target: https://www.pygame.org/
 -------
 
 # Major Companies
