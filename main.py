@@ -131,10 +131,6 @@ class Obstacle(pygame.sprite.Sprite):
 			FlagZombie_9 = pygame.image.load('graphics/zombie/FlagZombie_9.png').convert_alpha()
 			FlagZombie_10 = pygame.image.load('graphics/zombie/FlagZombie_10.png').convert_alpha()
 			FlagZombie_11 = pygame.image.load('graphics/zombie/FlagZombie_11.png').convert_alpha()
-
-   
-			
-			
 			self.frames = [
        			pygame.transform.scale(FlagZombie_0, (FlagZombie_0.get_width() * 0.57, FlagZombie_0.get_height() * 0.57)),
     			pygame.transform.scale(FlagZombie_1, (FlagZombie_1.get_width() * 0.57, FlagZombie_1.get_height() * 0.57)),
@@ -148,8 +144,6 @@ class Obstacle(pygame.sprite.Sprite):
     			pygame.transform.scale(FlagZombie_9, (FlagZombie_9.get_width() * 0.57, FlagZombie_9.get_height() * 0.57)),
     			pygame.transform.scale(FlagZombie_10, (FlagZombie_10.get_width() * 0.57, FlagZombie_10.get_height() * 0.57)),
     			pygame.transform.scale(FlagZombie_11, (FlagZombie_11.get_width() * 0.57, FlagZombie_11.get_height() * 0.57)),
-       
-       
 			]
 			y_pos = 301
 		
