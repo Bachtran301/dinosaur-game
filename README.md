@@ -17,6 +17,12 @@ Contents:
 
 A brief overview of the game Ninja Jumper, which involves a player character avoiding obstacles by jumping.
 
+<p align="center">
+    <img src="images/Lobby.jpg" width=260 alt="1">
+    <img src="images/Run_game.jpg" width=260 alt="2">
+    <img src="images/End_game.jpg" width=260 alt="3">
+</p>
+
 ## Installation
 
 Instructions on how to install necessary dependencies, such as Pygame.
