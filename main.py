@@ -61,20 +61,48 @@ class Obstacle(pygame.sprite.Sprite):
 		if type == 'fly':
 			fly_1 = pygame.image.load('graphics/fly/fly1.png').convert_alpha()
 			fly_2 = pygame.image.load('graphics/fly/fly2.png').convert_alpha()
+   
 			self.frames = [
        			pygame.transform.scale(fly_1, (fly_1.get_width() * 0.8, fly_1.get_height() * 0.8)),
-    			pygame.transform.scale(fly_2, (fly_2.get_width() * 0.8, fly_2.get_height() * 0.8))
+    			pygame.transform.scale(fly_2, (fly_2.get_width() * 0.8, fly_2.get_height() * 0.8)),
 			]
 			y_pos = 210
-		else:
+		elif type == 'ufo':
+			ufo = pygame.image.load('graphics/ufo/ufo.png').convert_alpha()
+			
+			self.frames = [
+				pygame.transform.scale(ufo, (ufo.get_width() * 0.65, ufo.get_height() * 0.65)),
+			]
+			y_pos = 210
+		elif type == 'snail':
 			snail_1 = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
 			snail_2 = pygame.image.load('graphics/snail/snail2.png').convert_alpha()
-			# self.frames = [
-            # 	pygame.transform.scale(snail_1, (snail_1.get_width() * 3, snail_1.get_height() * 3)),
-            # 	pygame.transform.scale(snail_2, (snail_2.get_width() * 3, snail_2.get_height() * 3))
-        	# ]
-			self.frames = [snail_1,snail_2]
+   
+			self.frames = [
+            	pygame.transform.scale(snail_1, (snail_1.get_width() * 1, snail_1.get_height() * 1)),
+            	pygame.transform.scale(snail_2, (snail_2.get_width() * 1, snail_2.get_height() * 1)),
+        	]
+			#self.frames = [snail_1,snail_2]
 			y_pos  = 300
+		elif type == 'cactus':
+			cactus = pygame.image.load('graphics/cactus/cactus.png').convert_alpha()
+			
+			self.frames = [
+				pygame.transform.scale(cactus, (cactus.get_width() * 1, cactus.get_height() * 1)),
+			]
+			y_pos = 300
+
+		elif type == 'zombie':
+			FlagZombie_0 = pygame.image.load('graphics/zombie/FlagZombie_0.png').convert_alpha()
+			FlagZombie_1 = pygame.image.load('graphics/zombie/FlagZombie_1.png').convert_alpha()
+			
+			
+			self.frames = [
+       			pygame.transform.scale(FlagZombie_0, (FlagZombie_0.get_width() * 0.5, FlagZombie_0.get_height() * 0.5)),
+    			pygame.transform.scale(FlagZombie_1, (FlagZombie_1.get_width() * 0.5, FlagZombie_1.get_height() * 0.5)),
+			]
+			y_pos = 300
+		
 
 		self.animation_index = 0
 		self.image = self.frames[self.animation_index]
@@ -153,7 +181,7 @@ while True:
 
 		if game_active:
 			if event.type == obstacle_timer:
-				obstacle_group.add(Obstacle(choice(['fly','snail','snail','snail'])))
+				obstacle_group.add(Obstacle(choice(['fly','snail','snail','snail','ufo','zombie','cactus'])))
 		
 		else:
 			if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
