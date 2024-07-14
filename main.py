@@ -182,6 +182,7 @@ test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
 game_active = False
 start_time = 0
 score = 0
+game_speed = 6
 #bg_music = pygame.mixer.Sound('audio/music.wav')
 #bg_music.play(loops = -1)
 
@@ -244,6 +245,14 @@ while True:
 		
 		screen.blit(ground_surface, (0,300))
 		score = display_score()
+
+		# Adjust the speed based on the score
+		if score < 10:
+			game_speed = 6
+		elif score < 20:
+			game_speed = 8
+		else:
+			game_speed = 10
 		
 		player.draw(screen)
 		player.update()
