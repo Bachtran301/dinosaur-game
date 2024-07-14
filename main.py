@@ -232,7 +232,6 @@ while True:
 				game_active = True
 				start_time = int(pygame.time.get_ticks() / 1000)
 
-
 	if game_active:
 		screen.blit(sky_surface,(0,0))
 		screen.blit(ground_surface,(0,300))
