@@ -34,9 +34,6 @@ class Player(pygame.sprite.Sprite):
 		for i in range(len(self.player_walk)):
 			self.player_walk[i].set_colorkey((0, 0, 0))
 
-
-
-		
 		self.player_jump = pygame.transform.scale(player_jump, (player_jump.get_width() * 3.5, player_jump.get_height() * 3.5))
 		self.player_jump.set_colorkey((0, 0, 0))
 
@@ -167,11 +164,19 @@ def display_score():
 	screen.blit(score_surf,score_rect)
 	return current_time
 
+def display_high_score(high_score):
+    high_score_surf = test_font.render(f'High Score: {high_score}', False, (255, 255, 255))
+    high_score_rect = high_score_surf.get_rect(center=(600, 50))
+    screen.blit(high_score_surf, high_score_rect)
+
+
+
 def collision_sprite():
 	if pygame.sprite.spritecollide(player.sprite,obstacle_group,False):
 		obstacle_group.empty()
 		return False
 	else: return True
+
 
 
 pygame.init()
@@ -183,8 +188,11 @@ game_active = False
 start_time = 0
 score = 0
 game_speed = 6
+high_score = 0
 #bg_music = pygame.mixer.Sound('audio/music.wav')
 #bg_music.play(loops = -1)
+
+
 
 #Groups
 player = pygame.sprite.GroupSingle()
@@ -217,6 +225,9 @@ game_message_rect = game_message.get_rect(center = (400,330))
 obstacle_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(obstacle_timer,1500)
 
+# Load high score từ file
+
+
 while True:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -231,6 +242,7 @@ while True:
 			if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
 				game_active = True
 				start_time = int(pygame.time.get_ticks() / 1000)
+				score = 0
 
 	if game_active:
 		# Change the background based on the score
@@ -261,8 +273,12 @@ while True:
 		obstacle_group.update()
 
 		game_active = collision_sprite()
+		display_high_score(high_score)
 		
 	else:
+		if score > high_score:
+			high_score = score
+   
 		screen.fill((94,129,162))
 		screen.blit(player_stand,player_stand_rect)
 
@@ -271,7 +287,9 @@ while True:
 		screen.blit(game_name,game_name_rect)
 
 		if score == 0: screen.blit(game_message,game_message_rect)
-		else: screen.blit(score_message,score_message_rect)
+		else:
+			screen.blit(score_message,score_message_rect)
+			#display_high_score(high_score)
 
 	pygame.display.update()
 	clock.tick(60)
