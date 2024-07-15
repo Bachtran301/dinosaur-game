@@ -5,18 +5,16 @@ from random import randint, choice
 class Player(pygame.sprite.Sprite):
 	def __init__(self):
 		super().__init__()
-		player_walk_0 = pygame.image.load('graphics/player/0.png').convert_alpha()
-		player_walk_1 = pygame.image.load('graphics/player/1.png').convert_alpha()
-		player_walk_2 = pygame.image.load('graphics/player/2.png').convert_alpha()
-		player_walk_3 = pygame.image.load('graphics/player/3.png').convert_alpha()
-		player_walk_4 = pygame.image.load('graphics/player/4.png').convert_alpha()
-		player_walk_5 = pygame.image.load('graphics/player/5.png').convert_alpha()
-		player_walk_6 = pygame.image.load('graphics/player/6.png').convert_alpha()
-		player_walk_7 = pygame.image.load('graphics/player/7.png').convert_alpha()
+		player_walk_0 = pygame.image.load('graphics/player/player1/0.png').convert_alpha()
+		player_walk_1 = pygame.image.load('graphics/player/player1/1.png').convert_alpha()
+		player_walk_2 = pygame.image.load('graphics/player/player1/2.png').convert_alpha()
+		player_walk_3 = pygame.image.load('graphics/player/player1/3.png').convert_alpha()
+		player_walk_4 = pygame.image.load('graphics/player/player1/4.png').convert_alpha()
+		player_walk_5 = pygame.image.load('graphics/player/player1/5.png').convert_alpha()
+		player_walk_6 = pygame.image.load('graphics/player/player1/6.png').convert_alpha()
+		player_walk_7 = pygame.image.load('graphics/player/player1/7.png').convert_alpha()
 
-  
-  
-		player_jump = pygame.image.load('graphics/player/jump.png').convert_alpha()
+		player_jump = pygame.image.load('graphics/player/player1/jump.png').convert_alpha()
 
 		# Phóng to và đặt màu trong suốt cho hình ảnh
 		self.player_walk = [
@@ -122,6 +120,7 @@ class Obstacle(pygame.sprite.Sprite):
 			FlagZombie_9 = pygame.image.load('graphics/zombie/FlagZombie_9.png').convert_alpha()
 			FlagZombie_10 = pygame.image.load('graphics/zombie/FlagZombie_10.png').convert_alpha()
 			FlagZombie_11 = pygame.image.load('graphics/zombie/FlagZombie_11.png').convert_alpha()
+
 			self.frames = [
        			pygame.transform.scale(FlagZombie_0, (FlagZombie_0.get_width() * 0.57, FlagZombie_0.get_height() * 0.57)),
     			pygame.transform.scale(FlagZombie_1, (FlagZombie_1.get_width() * 0.57, FlagZombie_1.get_height() * 0.57)),
@@ -136,7 +135,9 @@ class Obstacle(pygame.sprite.Sprite):
     			pygame.transform.scale(FlagZombie_10, (FlagZombie_10.get_width() * 0.57, FlagZombie_10.get_height() * 0.57)),
     			pygame.transform.scale(FlagZombie_11, (FlagZombie_11.get_width() * 0.57, FlagZombie_11.get_height() * 0.57)),
 			]
-			y_pos = 301
+			y_pos = 300
+			for i in range(len(self.frames)):
+				self.frames[i].set_colorkey((0, 0, 0))
 		
 
 		self.animation_index = 0
@@ -210,10 +211,20 @@ sky_surface_4 = pygame.image.load('graphics/Sky4.png').convert()
 ground_surface = pygame.image.load('graphics/ground.png').convert()
 
 # Intro screen
-player_stand = pygame.image.load('graphics/player/player_stand.png').convert_alpha()
-player_stand = pygame.transform.rotozoom(player_stand,0,5) # Phóng to hình ảnh
-player_stand.set_colorkey((0, 0, 0)) # Đặt màu trong suốt
-player_stand_rect = player_stand.get_rect(center = (400,200))
+player_stand_1 = pygame.image.load('graphics/player/player1/player_stand.png').convert_alpha()
+player_stand_1 = pygame.transform.rotozoom(player_stand_1,0,5) # Phóng to hình ảnh
+player_stand_1.set_colorkey((0, 0, 0)) # Đặt màu trong suốt
+player_stand_1_rect = player_stand_1.get_rect(center = (200,200))
+
+player_stand_2 = pygame.image.load('graphics/player/player2/player_stand.png').convert_alpha()
+player_stand_2 = pygame.transform.scale(player_stand_2, (80, 80))
+player_stand_2.set_colorkey((0, 0, 0)) # Đặt màu trong suốt
+player_stand_2_rect = player_stand_2.get_rect(center = (400,200))
+
+player_stand_3 = pygame.image.load('graphics/player/player3/player_stand.png').convert_alpha()
+player_stand_3 = pygame.transform.rotozoom(player_stand_3,0,5) # Phóng to hình ảnh
+player_stand_3.set_colorkey((0, 0, 0)) # Đặt màu trong suốt
+player_stand_3_rect = player_stand_3.get_rect(center = (600,200))
 
 game_name = test_font.render('Runner',False,(111,196,169))
 game_name_rect = game_name.get_rect(center = (400,80))
@@ -236,7 +247,7 @@ while True:
 
 		if game_active:
 			if event.type == obstacle_timer:
-				obstacle_group.add(Obstacle(choice(['fly','snail','snail','snail','ufo','zombie','cactus'])))
+				obstacle_group.add(Obstacle(choice(['fly','cactus','zombie','snail','ufo','zombie','cactus'])))
 		
 		else:
 			if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
@@ -246,11 +257,11 @@ while True:
 
 	if game_active:
 		# Change the background based on the score
-		if score < 20:
+		if score < 10:
 			screen.blit(sky_surface_1, (0,0))
-		elif score < 35:
+		elif score < 20:
 			screen.blit(sky_surface_2, (0,0))
-		elif score < 50:
+		elif score < 30:
 			screen.blit(sky_surface_3, (0,0))
 		else:
 			screen.blit(sky_surface_4, (0,0))
@@ -260,11 +271,11 @@ while True:
 
 		# Adjust the speed based on the score
 		if score < 10:
-			game_speed = 6
-		elif score < 20:
-			game_speed = 8
-		else:
 			game_speed = 10
+		elif score < 20:
+			game_speed = 15
+		else:
+			game_speed = 20
 		
 		player.draw(screen)
 		player.update()
@@ -280,7 +291,9 @@ while True:
 			high_score = score
    
 		screen.fill((94,129,162))
-		screen.blit(player_stand,player_stand_rect)
+		screen.blit(player_stand_1, player_stand_1_rect)
+		screen.blit(player_stand_2, player_stand_2_rect)
+		screen.blit(player_stand_3, player_stand_3_rect)
 
 		score_message = test_font.render(f'Your score: {score}',False,(111,196,169))
 		score_message_rect = score_message.get_rect(center = (400,330))
@@ -293,4 +306,3 @@ while True:
 
 	pygame.display.update()
 	clock.tick(60)
- 
