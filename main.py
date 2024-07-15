@@ -246,11 +246,11 @@ while True:
 
 	if game_active:
 		# Change the background based on the score
-		if score < 15:
+		if score < 20:
 			screen.blit(sky_surface_1, (0,0))
-		elif score < 30:
+		elif score < 35:
 			screen.blit(sky_surface_2, (0,0))
-		elif score < 40:
+		elif score < 50:
 			screen.blit(sky_surface_3, (0,0))
 		else:
 			screen.blit(sky_surface_4, (0,0))
