@@ -8,8 +8,8 @@ class Player(pygame.sprite.Sprite):
         self.character = character
         if character == 'Ninja':
             self.load_Ninja()
-        elif character == 'Alien':
-            self.load_Alien()
+        elif character == 'Rabbiter':
+            self.load_Rabbiter()
         elif character == 'Villager':
             self.load_Villager()
 
@@ -22,16 +22,16 @@ class Player(pygame.sprite.Sprite):
         # self.jump_sound.set_volume(0.5)
 
     def load_Ninja(self):
-        self.player_walk = [self.load_and_scale(f'graphics/player/Ninja/{i}.png', 3.5) for i in range(8)]
-        self.player_jump = self.load_and_scale('graphics/player/Ninja/jump.png', 3.5)
+        self.player_walk = [self.load_and_scale(f'graphics/player/Ninja/{i}.png', 3) for i in range(8)]
+        self.player_jump = self.load_and_scale('graphics/player/Ninja/jump.png', 3)
 
-    def load_Alien(self):
-        self.player_walk = [self.load_and_scale(f'graphics/player/Alien/{i}.png', 0.8) for i in range(2)]
-        self.player_jump = self.load_and_scale('graphics/player/Alien/jump.png', 0.8)
+    def load_Rabbiter(self):
+        self.player_walk = [self.load_and_scale(f'graphics/player/Rabbiter/{i}.png', 1) for i in range(3)]
+        self.player_jump = self.load_and_scale('graphics/player/Rabbiter/jump.png', 1)
 
     def load_Villager(self):
-        self.player_walk = [self.load_and_scale(f'graphics/player/Villager/{i}.png', 3.5) for i in range(8)]
-        self.player_jump = self.load_and_scale('graphics/player/Villager/jump.png', 3.5)
+        self.player_walk = [self.load_and_scale(f'graphics/player/Villager/{i}.png', 3) for i in range(8)]
+        self.player_jump = self.load_and_scale('graphics/player/Villager/jump.png', 3)
 
     def load_and_scale(self, path, scale):
         img = pygame.image.load(path).convert_alpha()
@@ -70,18 +70,17 @@ class Obstacle(pygame.sprite.Sprite):
         super().__init__()
         y_pos = 300
         if type == 'fly':
-            self.frames = [self.load_and_scale(f'graphics/fly/fly{i}.png', 0.8) for i in range(1, 3)]
+            self.frames = [self.load_and_scale(f'graphics/fly/fly{i}.png', 0.75) for i in range(2)]
             y_pos = 210
-        elif type == 'ufo':
-            self.frames = [self.load_and_scale('graphics/ufo/ufo.png', 0.65)]
+        elif type == 'bee':
+            self.frames = [self.load_and_scale(f'graphics/bee/bee{i}.png', 0.75) for i in range(2)]
             y_pos = 210
         elif type == 'snail':
-            self.frames = [self.load_and_scale(f'graphics/snail/snail{i}.png', 1) for i in range(1, 3)]
+            self.frames = [self.load_and_scale(f'graphics/snail/snail{i}.png', 1) for i in range(2)]
         elif type == 'cactus':
             self.frames = [self.load_and_scale('graphics/cactus/cactus.png', 1)]
-        elif type == 'zombie':
-            self.frames = [self.load_and_scale(f'graphics/zombie/FlagZombie_{i}.png', 0.57) for i in range(12)]
-
+        elif type == 'worm':
+            self.frames = [self.load_and_scale(f'graphics/worm/worm{i}.png', 1) for i in range(2)]
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
         self.rect = self.image.get_rect(midbottom=(randint(900, 1100), y_pos))
@@ -99,6 +98,21 @@ class Obstacle(pygame.sprite.Sprite):
 
     def update(self):
         self.animation_state()
+        self.rect.x -= 6
+        self.destroy()
+
+    def destroy(self):
+        if self.rect.x <= -100:
+            self.kill()
+
+class Coin(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('graphics/coin/gold.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image, (self.image.get_width(), self.image.get_height()))
+        self.rect = self.image.get_rect(midbottom=(randint(900, 1100), randint(150, 250)))
+
+    def update(self):
         self.rect.x -= 6
         self.destroy()
 
@@ -130,6 +144,11 @@ def collision_sprite():
         return False
     else: return True
 
+def collision_coin():
+    global start_time
+    if pygame.sprite.spritecollide(player.sprite, coin_group, True):
+        start_time -= 5  # Subtract 5 seconds to add to the score
+
 pygame.init()
 screen = pygame.display.set_mode((800, 400))
 pygame.display.set_caption('Runner')
@@ -145,7 +164,7 @@ player_choice = None
 # Load all player stand images for selection
 player_stand_images = [
     ('Ninja', pygame.image.load('graphics/player/Ninja/player_stand.png').convert_alpha(), (200, 200), 5),
-    ('Alien', pygame.image.load('graphics/player/Alien/player_stand.png').convert_alpha(), (400, 200), 1),
+    ('Rabbiter', pygame.image.load('graphics/player/Rabbiter/player_stand.png').convert_alpha(), (400, 200), 1.3),
     ('Villager', pygame.image.load('graphics/player/Villager/player_stand.png').convert_alpha(), (600, 200), 5),
 ]
 
@@ -160,6 +179,7 @@ for i in range(len(player_stand_images)):
 # Groups
 player = pygame.sprite.GroupSingle()
 obstacle_group = pygame.sprite.Group()
+coin_group = pygame.sprite.Group()
 
 sky_surfaces = [
     pygame.image.load(f'graphics/Sky{i}.png').convert() for i in range(1, 5)
@@ -175,7 +195,9 @@ game_message_rect = game_message.get_rect(center=(400, 375))
 
 # Timer
 obstacle_timer = pygame.USEREVENT + 1
+coin_timer = pygame.USEREVENT + 2
 pygame.time.set_timer(obstacle_timer, 1500)
+pygame.time.set_timer(coin_timer, 5000)
 
 while True:
     for event in pygame.event.get():
@@ -185,7 +207,9 @@ while True:
 
         if game_active:
             if event.type == obstacle_timer:
-                obstacle_group.add(Obstacle(choice(['fly', 'cactus', 'zombie', 'snail', 'ufo', 'zombie', 'cactus'])))
+                obstacle_group.add(Obstacle(choice(['fly', 'cactus', 'snail', 'bee', 'worm', 'cactus'])))
+            if event.type == coin_timer:
+                coin_group.add(Coin())
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if player.rect.collidepoint(event.pos) and player.rect.bottom >= 300:
                     player.gravity = -20
@@ -206,7 +230,7 @@ while True:
                         player_choice = name
 
     if game_active:
-        screen.blit(sky_surfaces[min(score // 10, 3)], (0, 0))
+        screen.blit(sky_surfaces[min(score // 20, 3)], (0, 0))
         screen.blit(ground_surface, (0, 300))
         score = display_score()
 
@@ -216,8 +240,14 @@ while True:
         obstacle_group.draw(screen)
         obstacle_group.update()
 
+        coin_group.draw(screen)
+        coin_group.update()
+
         game_active = collision_sprite()
+        collision_coin()
         display_high_score(high_score)
+        
+        
     else:
         if score > high_score:
             high_score = score
