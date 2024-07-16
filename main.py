@@ -15,50 +15,35 @@ class Player(pygame.sprite.Sprite):
 
         self.player_index = 0
         self.image = self.player_walk[self.player_index]
-        self.rect = self.image.get_rect(midbottom = (80,300))
+        self.rect = self.image.get_rect(midbottom=(80, 300))
         self.gravity = 0
 
-        #self.jump_sound = pygame.mixer.Sound('audio/jump.mp3')
-        #self.jump_sound.set_volume(0.5)
+        # self.jump_sound = pygame.mixer.Sound('audio/jump.mp3')
+        # self.jump_sound.set_volume(0.5)
 
     def load_Ninja(self):
-        self.player_walk = []
-        for i in range(8):
-            img = pygame.image.load(f'graphics/player/Ninja/{i}.png').convert_alpha()
-            img = pygame.transform.scale(img, (img.get_width() * 3.5, img.get_height() * 3.5))
-            img.set_colorkey((0, 0, 0))
-            self.player_walk.append(img)
-        self.player_jump = pygame.image.load('graphics/player/Ninja/jump.png').convert_alpha()
-        self.player_jump = pygame.transform.scale(self.player_jump, (self.player_jump.get_width() * 3.5, self.player_jump.get_height() * 3.5))
-        self.player_jump.set_colorkey((0, 0, 0))
+        self.player_walk = [self.load_and_scale(f'graphics/player/Ninja/{i}.png', 3.5) for i in range(8)]
+        self.player_jump = self.load_and_scale('graphics/player/Ninja/jump.png', 3.5)
 
     def load_Alien(self):
-        self.player_walk = []
-        for i in range(2):
-            img = pygame.image.load(f'graphics/player/Alien/{i}.png').convert_alpha()
-            img = pygame.transform.scale(img, (img.get_width() * 0.8, img.get_height() * 0.8))
-            img.set_colorkey((0, 0, 0))
-            self.player_walk.append(img)
-        self.player_jump = pygame.image.load('graphics/player/Alien/jump.png').convert_alpha()
-        self.player_jump = pygame.transform.scale(self.player_jump, (self.player_jump.get_width() * 0.8, self.player_jump.get_height() * 0.8))
-        self.player_jump.set_colorkey((0, 0, 0))
+        self.player_walk = [self.load_and_scale(f'graphics/player/Alien/{i}.png', 0.8) for i in range(2)]
+        self.player_jump = self.load_and_scale('graphics/player/Alien/jump.png', 0.8)
 
     def load_Villager(self):
-        self.player_walk = []
-        for i in range(8):
-            img = pygame.image.load(f'graphics/player/Villager/{i}.png').convert_alpha()
-            img = pygame.transform.scale(img, (img.get_width() * 3.5, img.get_height() * 3.5))
-            img.set_colorkey((0, 0, 0))
-            self.player_walk.append(img)
-        self.player_jump = pygame.image.load('graphics/player/Villager/jump.png').convert_alpha()
-        self.player_jump = pygame.transform.scale(self.player_jump, (self.player_jump.get_width() * 3.5, self.player_jump.get_height() * 3.5))
-        self.player_jump.set_colorkey((0, 0, 0))
+        self.player_walk = [self.load_and_scale(f'graphics/player/Villager/{i}.png', 3.5) for i in range(8)]
+        self.player_jump = self.load_and_scale('graphics/player/Villager/jump.png', 3.5)
+
+    def load_and_scale(self, path, scale):
+        img = pygame.image.load(path).convert_alpha()
+        img = pygame.transform.scale(img, (img.get_width() * scale, img.get_height() * scale))
+        img.set_colorkey((0, 0, 0))
+        return img
 
     def player_input(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
             self.gravity = -20
-            #self.jump_sound.play()
+            # self.jump_sound.play()
 
     def apply_gravity(self):
         self.gravity += 1
@@ -83,73 +68,28 @@ class Player(pygame.sprite.Sprite):
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, type):
         super().__init__()
-
+        y_pos = 300
         if type == 'fly':
-            fly_1 = pygame.image.load('graphics/fly/fly1.png').convert_alpha()
-            fly_2 = pygame.image.load('graphics/fly/fly2.png').convert_alpha()
-   
-            self.frames = [
-                pygame.transform.scale(fly_1, (fly_1.get_width() * 0.8, fly_1.get_height() * 0.8)),
-                pygame.transform.scale(fly_2, (fly_2.get_width() * 0.8, fly_2.get_height() * 0.8)),
-            ]
+            self.frames = [self.load_and_scale(f'graphics/fly/fly{i}.png', 0.8) for i in range(1, 3)]
             y_pos = 210
         elif type == 'ufo':
-            ufo = pygame.image.load('graphics/ufo/ufo.png').convert_alpha()
-            
-            self.frames = [
-                pygame.transform.scale(ufo, (ufo.get_width() * 0.65, ufo.get_height() * 0.65)),
-            ]
+            self.frames = [self.load_and_scale('graphics/ufo/ufo.png', 0.65)]
             y_pos = 210
         elif type == 'snail':
-            snail_1 = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
-            snail_2 = pygame.image.load('graphics/snail/snail2.png').convert_alpha()
-   
-            self.frames = [
-                pygame.transform.scale(snail_1, (snail_1.get_width() * 1, snail_1.get_height() * 1)),
-                pygame.transform.scale(snail_2, (snail_2.get_width() * 1, snail_2.get_height() * 1)),
-            ]
-            y_pos  = 300
+            self.frames = [self.load_and_scale(f'graphics/snail/snail{i}.png', 1) for i in range(1, 3)]
         elif type == 'cactus':
-            cactus = pygame.image.load('graphics/cactus/cactus.png').convert_alpha()
-            
-            self.frames = [
-                pygame.transform.scale(cactus, (cactus.get_width() * 1, cactus.get_height() * 1)),
-            ]
-            y_pos = 300
-
+            self.frames = [self.load_and_scale('graphics/cactus/cactus.png', 1)]
         elif type == 'zombie':
-            FlagZombie_0 = pygame.image.load('graphics/zombie/FlagZombie_0.png').convert_alpha()
-            FlagZombie_1 = pygame.image.load('graphics/zombie/FlagZombie_1.png').convert_alpha()
-            FlagZombie_2 = pygame.image.load('graphics/zombie/FlagZombie_2.png').convert_alpha()
-            FlagZombie_3 = pygame.image.load('graphics/zombie/FlagZombie_3.png').convert_alpha()
-            FlagZombie_4 = pygame.image.load('graphics/zombie/FlagZombie_4.png').convert_alpha()
-            FlagZombie_5 = pygame.image.load('graphics/zombie/FlagZombie_5.png').convert_alpha()
-            FlagZombie_6 = pygame.image.load('graphics/zombie/FlagZombie_6.png').convert_alpha()
-            FlagZombie_7 = pygame.image.load('graphics/zombie/FlagZombie_7.png').convert_alpha()
-            FlagZombie_8 = pygame.image.load('graphics/zombie/FlagZombie_8.png').convert_alpha()
-            FlagZombie_9 = pygame.image.load('graphics/zombie/FlagZombie_9.png').convert_alpha()
-            FlagZombie_10 = pygame.image.load('graphics/zombie/FlagZombie_10.png').convert_alpha()
-            FlagZombie_11 = pygame.image.load('graphics/zombie/FlagZombie_11.png').convert_alpha()
-
-            self.frames = [
-                pygame.transform.scale(FlagZombie_0, (FlagZombie_0.get_width() * 0.57, FlagZombie_0.get_height() * 0.57)),
-                pygame.transform.scale(FlagZombie_1, (FlagZombie_1.get_width() * 0.57, FlagZombie_1.get_height() * 0.57)),
-                pygame.transform.scale(FlagZombie_2, (FlagZombie_2.get_width() * 0.57, FlagZombie_2.get_height() * 0.57)),
-                pygame.transform.scale(FlagZombie_3, (FlagZombie_3.get_width() * 0.57, FlagZombie_3.get_height() * 0.57)),
-                pygame.transform.scale(FlagZombie_4, (FlagZombie_4.get_width() * 0.57, FlagZombie_4.get_height() * 0.57)),
-                pygame.transform.scale(FlagZombie_5, (FlagZombie_5.get_width() * 0.57, FlagZombie_5.get_height() * 0.57)),
-                pygame.transform.scale(FlagZombie_6, (FlagZombie_6.get_width() * 0.57, FlagZombie_6.get_height() * 0.57)),
-                pygame.transform.scale(FlagZombie_7, (FlagZombie_7.get_width() * 0.57, FlagZombie_7.get_height() * 0.57)),
-                pygame.transform.scale(FlagZombie_8, (FlagZombie_8.get_width() * 0.57, FlagZombie_8.get_height() * 0.57)),
-                pygame.transform.scale(FlagZombie_9, (FlagZombie_9.get_width() * 0.57, FlagZombie_9.get_height() * 0.57)),
-                pygame.transform.scale(FlagZombie_10, (FlagZombie_10.get_width() * 0.57, FlagZombie_10.get_height() * 0.57)),
-                pygame.transform.scale(FlagZombie_11, (FlagZombie_11.get_width() * 0.57, FlagZombie_11.get_height() * 0.57)),
-            ]
-            y_pos = 300
+            self.frames = [self.load_and_scale(f'graphics/zombie/FlagZombie_{i}.png', 0.57) for i in range(12)]
 
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
-        self.rect = self.image.get_rect(midbottom = (randint(900,1100),y_pos))
+        self.rect = self.image.get_rect(midbottom=(randint(900, 1100), y_pos))
+
+    def load_and_scale(self, path, scale):
+        img = pygame.image.load(path).convert_alpha()
+        img = pygame.transform.scale(img, (img.get_width() * scale, img.get_height() * scale))
+        return img
 
     def animation_state(self):
         self.animation_index += 0.1
@@ -168,32 +108,30 @@ class Obstacle(pygame.sprite.Sprite):
 
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
-    score_surf = test_font.render(f'Score: {current_time}', False, (64,64,64))
-    score_rect = score_surf.get_rect(center = (400,50))
-    screen.blit(score_surf,score_rect)
+    score_surf = test_font.render(f'Score: {current_time}', False, (64, 64, 64))
+    score_rect = score_surf.get_rect(center=(400, 50))
+    screen.blit(score_surf, score_rect)
     return current_time
 
 def display_high_score(high_score):
     high_score_surf = test_font.render(f'High Score: {high_score}', False, (255, 255, 255))
     high_score_rect = high_score_surf.get_rect(center=(600, 50))
     screen.blit(high_score_surf, high_score_rect)
-    
 
-
-def collisions(player,obstacles):
+def collisions(player, obstacles):
     if obstacles:
         for obstacle_rect in obstacles:
             if player.colliderect(obstacle_rect): return False
     return True
 
 def collision_sprite():
-    if pygame.sprite.spritecollide(player.sprite,obstacle_group,False):
+    if pygame.sprite.spritecollide(player.sprite, obstacle_group, False):
         obstacle_group.empty()
         return False
     else: return True
 
 pygame.init()
-screen = pygame.display.set_mode((800,400))
+screen = pygame.display.set_mode((800, 400))
 pygame.display.set_caption('Runner')
 clock = pygame.time.Clock()
 test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
@@ -205,53 +143,49 @@ high_score = 0
 player_choice = None
 
 # Load all player stand images for selection
-player_stand_1 = pygame.image.load('graphics/player/Ninja/player_stand.png').convert_alpha()
-player_stand_1 = pygame.transform.rotozoom(player_stand_1, 0,5)
-player_stand_1.set_colorkey((0, 0, 0))
-player_stand_1_rect = player_stand_1.get_rect(center=(200, 200))
+player_stand_images = [
+    ('Ninja', pygame.image.load('graphics/player/Ninja/player_stand.png').convert_alpha(), (200, 200), 5),
+    ('Alien', pygame.image.load('graphics/player/Alien/player_stand.png').convert_alpha(), (400, 200), 1),
+    ('Villager', pygame.image.load('graphics/player/Villager/player_stand.png').convert_alpha(), (600, 200), 5),
+]
 
-player_stand_2 = pygame.image.load('graphics/player/Alien/player_stand.png').convert_alpha()
-player_stand_2 = pygame.transform.scale(player_stand_2, (80, 80))
-player_stand_2.set_colorkey((0, 0, 0))
-player_stand_2_rect = player_stand_2.get_rect(center=(400, 200))
-
-player_stand_3 = pygame.image.load('graphics/player/Villager/player_stand.png').convert_alpha()
-player_stand_3 = pygame.transform.rotozoom(player_stand_3, 0,5)
-player_stand_3.set_colorkey((0, 0, 0))
-player_stand_3_rect = player_stand_3.get_rect(center=(600, 200))
+for i in range(len(player_stand_images)):
+    player_stand_images[i] = (
+        player_stand_images[i][0],
+        pygame.transform.rotozoom(player_stand_images[i][1], 0, player_stand_images[i][3]),
+        player_stand_images[i][2],
+    )
+    player_stand_images[i][1].set_colorkey((0, 0, 0))
 
 # Groups
 player = pygame.sprite.GroupSingle()
 obstacle_group = pygame.sprite.Group()
 
-sky_surface_1 = pygame.image.load('graphics/Sky1.png').convert()
-sky_surface_2 = pygame.image.load('graphics/Sky2.png').convert()
-sky_surface_3 = pygame.image.load('graphics/Sky3.png').convert()
-sky_surface_4 = pygame.image.load('graphics/Sky4.png').convert()
+sky_surfaces = [
+    pygame.image.load(f'graphics/Sky{i}.png').convert() for i in range(1, 5)
+]
 ground_surface = pygame.image.load('graphics/ground.png').convert()
 
 # Intro screen
-
-
-game_name = test_font.render('Select character', False, (111,196,169))
+game_name = test_font.render('Select character', False, (111, 196, 169))
 game_name_rect = game_name.get_rect(center=(400, 80))
 
-game_message = test_font.render('Press space to run', False, (111,196,169))
+game_message = test_font.render('Press space to run', False, (111, 196, 169))
 game_message_rect = game_message.get_rect(center=(400, 375))
 
-# Timer 
+# Timer
 obstacle_timer = pygame.USEREVENT + 1
-pygame.time.set_timer(obstacle_timer,1500)
+pygame.time.set_timer(obstacle_timer, 1500)
 
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        
+
         if game_active:
             if event.type == obstacle_timer:
-                obstacle_group.add(Obstacle(choice(['fly','cactus','zombie','snail','ufo','zombie','cactus'])))
+                obstacle_group.add(Obstacle(choice(['fly', 'cactus', 'zombie', 'snail', 'ufo', 'zombie', 'cactus'])))
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if player.rect.collidepoint(event.pos) and player.rect.bottom >= 300:
                     player.gravity = -20
@@ -267,23 +201,13 @@ while True:
                     player.add(Player(player_choice))
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if player_stand_1_rect.collidepoint(event.pos):
-                    player_choice = 'Ninja'
-                elif player_stand_2_rect.collidepoint(event.pos):
-                    player_choice = 'Alien'
-                elif player_stand_3_rect.collidepoint(event.pos):
-                    player_choice = 'Villager'
+                for name, img, pos in player_stand_images:
+                    if img.get_rect(center=pos).collidepoint(event.pos):
+                        player_choice = name
 
     if game_active:
-        if score < 10:
-            screen.blit(sky_surface_1, (0,0))
-        elif score < 20:
-            screen.blit(sky_surface_2, (0,0))
-        elif score < 30:
-            screen.blit(sky_surface_3, (0,0))
-        else:
-            screen.blit(sky_surface_4, (0,0))
-        screen.blit(ground_surface, (0,300))
+        screen.blit(sky_surfaces[min(score // 10, 3)], (0, 0))
+        screen.blit(ground_surface, (0, 300))
         score = display_score()
 
         player.draw(screen)
@@ -297,24 +221,23 @@ while True:
     else:
         if score > high_score:
             high_score = score
-            
+
         screen.fill((94, 129, 162))
         screen.blit(game_name, game_name_rect)
         screen.blit(game_message, game_message_rect)
-        screen.blit(player_stand_1, player_stand_1_rect)
-        screen.blit(player_stand_2, player_stand_2_rect)
-        screen.blit(player_stand_3, player_stand_3_rect)
-        
-        score_message = test_font.render(f'Your score: {score}',False,(111,196,169))
-        score_message_rect = score_message.get_rect(center = (400,120))
-        screen.blit(game_name,game_name_rect)
-        
-        if score == 0: screen.blit(game_message,game_message_rect)
+        for _, img, pos in player_stand_images:
+            screen.blit(img, img.get_rect(center=pos))
+
+        score_message = test_font.render(f'Your score: {score}', False, (111, 196, 169))
+        score_message_rect = score_message.get_rect(center=(400, 120))
+        screen.blit(game_name, game_name_rect)
+
+        if score == 0:
+            screen.blit(game_message, game_message_rect)
         else:
-            screen.blit(score_message,score_message_rect)
-			#display_high_score(high_score)
+            screen.blit(score_message, score_message_rect)
         if player_choice:
-            selected_surf = test_font.render(f'Selected: {player_choice}', False, (111,196,169))
+            selected_surf = test_font.render(f'Selected: {player_choice}', False, (111, 196, 169))
             selected_rect = selected_surf.get_rect(center=(400, 300))
             screen.blit(selected_surf, selected_rect)
 
