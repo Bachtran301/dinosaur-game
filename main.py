@@ -31,8 +31,8 @@ class Player(pygame.sprite.Sprite):
         self.player_jump = self.load_and_scale('graphics/player/Rabbiter/jump.png', 1)
 
     def load_Villager(self):
-        self.player_walk = [self.load_and_scale(f'graphics/player/Villager/{i}.png', 0.55) for i in range(4)]
-        self.player_jump = self.load_and_scale('graphics/player/Villager/jump.png', 0.55)
+        self.player_walk = [self.load_and_scale(f'graphics/player/Villager/{i}.png', 0.5) for i in range(4)]
+        self.player_jump = self.load_and_scale('graphics/player/Villager/jump.png', 0.5)
 
     def load_and_scale(self, path, scale):
         img = pygame.image.load(path).convert_alpha()
@@ -73,13 +73,15 @@ class Obstacle(pygame.sprite.Sprite):
         if type == 'fly':
             self.frames = [self.load_and_scale(f'graphics/fly/fly{i}.png', 0.75) for i in range(2)]
             y_pos = 210
+        elif type == 'spikes':
+            self.frames = [self.load_and_scale(f'graphics/spikes/spikes{i}.png', 0.75) for i in range(1)]
+        elif type == 'snail':
+            self.frames = [self.load_and_scale(f'graphics/snail/snail{i}.png', 1) for i in range(2)]
+        elif type == 'tooth':
+            self.frames = [self.load_and_scale('graphics/tooth/tooth.png', 1)]
         elif type == 'bee':
             self.frames = [self.load_and_scale(f'graphics/bee/bee{i}.png', 0.75) for i in range(2)]
             y_pos = 210
-        elif type == 'snail':
-            self.frames = [self.load_and_scale(f'graphics/snail/snail{i}.png', 1) for i in range(2)]
-        elif type == 'cactus':
-            self.frames = [self.load_and_scale('graphics/cactus/cactus.png', 1)]
         elif type == 'worm':
             self.frames = [self.load_and_scale(f'graphics/worm/worm{i}.png', 1) for i in range(2)]
         self.animation_index = 0
@@ -89,6 +91,7 @@ class Obstacle(pygame.sprite.Sprite):
     def load_and_scale(self, path, scale):
         img = pygame.image.load(path).convert_alpha()
         img = pygame.transform.scale(img, (img.get_width() * scale, img.get_height() * scale))
+        img.set_colorkey((0, 0, 0))
         return img
 
     def animation_state(self):
@@ -172,8 +175,8 @@ selection_message = ""
 # Load all player stand images for selection
 player_stand_images = [
     ('Ninja', pygame.image.load('graphics/player/Ninja/player_stand.png').convert_alpha(), (200, 200), 5, 0),
-    ('Rabbiter', pygame.image.load('graphics/player/Rabbiter/player_stand.png').convert_alpha(), (400, 200), 1.3, 50),
-    ('Villager', pygame.image.load('graphics/player/Villager/player_stand.png').convert_alpha(), (600, 200), 0.8, 100),
+    ('Rabbiter', pygame.image.load('graphics/player/Rabbiter/player_stand.png').convert_alpha(), (400, 200), 1.3, 10),
+    ('Villager', pygame.image.load('graphics/player/Villager/player_stand.png').convert_alpha(), (600, 200), 0.8, 20),
 ]
 
 for i in range(len(player_stand_images)):
@@ -210,6 +213,9 @@ coin_timer = pygame.USEREVENT + 2
 pygame.time.set_timer(obstacle_timer, 1500)
 pygame.time.set_timer(coin_timer, 5000)
 
+min_obstacle_timer = 800  # Thời gian tối thiểu (mili giây)
+max_obstacle_timer = 1500  # Thời gian tối đa (mili giây)
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -218,7 +224,10 @@ while True:
 
         if game_active:
             if event.type == obstacle_timer:
-                obstacle_group.add(Obstacle(choice(['fly', 'cactus', 'snail', 'bee', 'worm', 'cactus'])))
+                obstacle_group.add(Obstacle(choice(['fly', 'spikes', 'snail', 'bee', 'worm', 'tooth'])))
+                # Điều chỉnh timer dựa trên điểm số
+                new_timer = max(min_obstacle_timer, max_obstacle_timer - (score * 15))  # Giảm khoảng thời gian khi điểm số tăng
+                pygame.time.set_timer(obstacle_timer, new_timer)
             if event.type == coin_timer:
                 if random.random() < 0.05:  # 5% cơ hội tạo ra kim cương
                     coin_group.add(Coin('diamond'))
