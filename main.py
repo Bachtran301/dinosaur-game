@@ -1,6 +1,7 @@
 import pygame
 from sys import exit
 from random import randint, choice
+import random
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, character):
@@ -30,8 +31,8 @@ class Player(pygame.sprite.Sprite):
         self.player_jump = self.load_and_scale('graphics/player/Rabbiter/jump.png', 1)
 
     def load_Villager(self):
-        self.player_walk = [self.load_and_scale(f'graphics/player/Villager/{i}.png', 3) for i in range(8)]
-        self.player_jump = self.load_and_scale('graphics/player/Villager/jump.png', 3)
+        self.player_walk = [self.load_and_scale(f'graphics/player/Villager/{i}.png', 0.55) for i in range(4)]
+        self.player_jump = self.load_and_scale('graphics/player/Villager/jump.png', 0.55)
 
     def load_and_scale(self, path, scale):
         img = pygame.image.load(path).convert_alpha()
@@ -106,11 +107,17 @@ class Obstacle(pygame.sprite.Sprite):
             self.kill()
 
 class Coin(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, coin_type):
         super().__init__()
-        self.image = pygame.image.load('graphics/coin/gold.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image, (self.image.get_width(), self.image.get_height()))
-        self.rect = self.image.get_rect(midbottom=(randint(900, 1100), randint(150, 250)))
+        self.coin_type = coin_type
+        if coin_type == 'gold':
+            self.image = pygame.image.load('graphics/coin/gold.png').convert_alpha()
+            self.image = pygame.transform.scale(self.image, (self.image.get_width(), self.image.get_height()))
+            self.rect = self.image.get_rect(midbottom=(randint(900, 1100), randint(150, 250)))
+        elif coin_type == 'diamond':
+            self.image = pygame.image.load('graphics/coin/diamond.png').convert_alpha()
+            self.image = pygame.transform.scale(self.image, (self.image.get_width(), self.image.get_height()))
+            self.rect = self.image.get_rect(midbottom=(randint(900, 1100), randint(100, 150)))
 
     def update(self):
         self.rect.x -= 6
@@ -147,7 +154,7 @@ def collision_sprite():
 def collision_coin():
     global start_time
     if pygame.sprite.spritecollide(player.sprite, coin_group, True):
-        start_time -= 5  # Subtract 5 seconds to add to the score
+        start_time -= 2  # cộng điểm khi nhặt coin
 
 pygame.init()
 screen = pygame.display.set_mode((800, 400))
@@ -160,12 +167,13 @@ score = 0
 game_speed = 6
 high_score = 0
 player_choice = None
+selection_message = ""
 
 # Load all player stand images for selection
 player_stand_images = [
-    ('Ninja', pygame.image.load('graphics/player/Ninja/player_stand.png').convert_alpha(), (200, 200), 5),
-    ('Rabbiter', pygame.image.load('graphics/player/Rabbiter/player_stand.png').convert_alpha(), (400, 200), 1.3),
-    ('Villager', pygame.image.load('graphics/player/Villager/player_stand.png').convert_alpha(), (600, 200), 5),
+    ('Ninja', pygame.image.load('graphics/player/Ninja/player_stand.png').convert_alpha(), (200, 200), 5, 0),
+    ('Rabbiter', pygame.image.load('graphics/player/Rabbiter/player_stand.png').convert_alpha(), (400, 200), 1.3, 50),
+    ('Villager', pygame.image.load('graphics/player/Villager/player_stand.png').convert_alpha(), (600, 200), 0.8, 100),
 ]
 
 for i in range(len(player_stand_images)):
@@ -173,8 +181,11 @@ for i in range(len(player_stand_images)):
         player_stand_images[i][0],
         pygame.transform.rotozoom(player_stand_images[i][1], 0, player_stand_images[i][3]),
         player_stand_images[i][2],
+        player_stand_images[i][4]
     )
     player_stand_images[i][1].set_colorkey((0, 0, 0))
+
+
 
 # Groups
 player = pygame.sprite.GroupSingle()
@@ -209,7 +220,10 @@ while True:
             if event.type == obstacle_timer:
                 obstacle_group.add(Obstacle(choice(['fly', 'cactus', 'snail', 'bee', 'worm', 'cactus'])))
             if event.type == coin_timer:
-                coin_group.add(Coin())
+                if random.random() < 0.05:  # 5% cơ hội tạo ra kim cương
+                    coin_group.add(Coin('diamond'))
+                else:
+                    coin_group.add(Coin('gold'))
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if player.rect.collidepoint(event.pos) and player.rect.bottom >= 300:
                     player.gravity = -20
@@ -225,9 +239,13 @@ while True:
                     player.add(Player(player_choice))
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                for name, img, pos in player_stand_images:
+                for name, img, pos, required_score in player_stand_images:
                     if img.get_rect(center=pos).collidepoint(event.pos):
-                        player_choice = name
+                        if high_score >= required_score:
+                            player_choice = name
+                            selection_message = ""
+                        else:
+                            selection_message = f"{name} requires {required_score} points!"
 
     if game_active:
         screen.blit(sky_surfaces[min(score // 20, 3)], (0, 0))
@@ -247,7 +265,6 @@ while True:
         collision_coin()
         display_high_score(high_score)
         
-        
     else:
         if score > high_score:
             high_score = score
@@ -255,7 +272,7 @@ while True:
         screen.fill((94, 129, 162))
         screen.blit(game_name, game_name_rect)
         screen.blit(game_message, game_message_rect)
-        for _, img, pos in player_stand_images:
+        for _, img, pos, _ in player_stand_images:
             screen.blit(img, img.get_rect(center=pos))
 
         score_message = test_font.render(f'Your score: {score}', False, (111, 196, 169))
@@ -266,10 +283,15 @@ while True:
             screen.blit(game_message, game_message_rect)
         else:
             screen.blit(score_message, score_message_rect)
-        if player_choice:
+        if player_choice and selection_message == "":
             selected_surf = test_font.render(f'Selected: {player_choice}', False, (111, 196, 169))
             selected_rect = selected_surf.get_rect(center=(400, 300))
             screen.blit(selected_surf, selected_rect)
+
+        if selection_message:
+            message_surf = test_font.render(selection_message, False, (255, 0, 0))
+            message_rect = message_surf.get_rect(center=(400, 320))
+            screen.blit(message_surf, message_rect)
 
     pygame.display.update()
     clock.tick(60)
