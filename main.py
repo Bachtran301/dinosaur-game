@@ -143,10 +143,22 @@ def display_rankings(rankings):
     rankings_rect = rankings_surf.get_rect(center=(400, 50))
     screen.blit(rankings_surf, rankings_rect)
     
+    rank_column_surf = test_font.render('Rank', False, (255, 255, 255))
+    rank_column_rect = rank_column_surf.get_rect(center=(300, 100))
+    screen.blit(rank_column_surf, rank_column_rect)
+    
+    score_column_surf = test_font.render('Score', False, (255, 255, 255))
+    score_column_rect = score_column_surf.get_rect(center=(500, 100))
+    screen.blit(score_column_surf, score_column_rect)
+    
     for i, score in enumerate(rankings[:5]):
-        ranking_surf = test_font.render(f'{i + 1}.   {score}', False, (255, 255, 255))
-        ranking_rect = ranking_surf.get_rect(center=(400, 100 + i * 50))
-        screen.blit(ranking_surf, ranking_rect)
+        rank_surf = test_font.render(f'{i + 1}', False, (255, 255, 255))
+        rank_rect = rank_surf.get_rect(center=(300, 150 + i * 50))
+        screen.blit(rank_surf, rank_rect)
+        
+        score_surf = test_font.render(f'{score}', False, (255, 255, 255))
+        score_rect = score_surf.get_rect(center=(500, 150 + i * 50))
+        screen.blit(score_surf, score_rect)
 
 def collisions(player, obstacles):
     if obstacles:
@@ -325,7 +337,7 @@ while True:
         for _, img, pos, _ in player_stand_images:
             screen.blit(img, img.get_rect(center=pos))
 
-        score_message = test_font.render(f'Your score: {score}', False, (111, 196, 169))
+        score_message = test_font.render(f'High score: {high_score}', False, (111, 196, 169))
         score_message_rect = score_message.get_rect(center=(400, 120))
         screen.blit(game_name, game_name_rect)
 
@@ -351,9 +363,9 @@ while True:
     elif game_state == RANKINGS_DISPLAY:
         screen.fill((94, 129, 162))
         display_rankings(rankings)
-        rank_message = test_font.render('Press SPACE to go to character selection', False, (111, 196, 169))
-        rank_message_rect = rank_message.get_rect(center=(400, 350))
-        screen.blit(rank_message, rank_message_rect)
+        #rank_message = test_font.render('Press SPACE to go to character selection', False, (111, 196, 169))
+        #rank_message_rect = rank_message.get_rect(center=(400, 350))
+        #screen.blit(rank_message, rank_message_rect)
 
     pygame.display.update()
     clock.tick(60)
