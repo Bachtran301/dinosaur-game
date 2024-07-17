@@ -19,9 +19,6 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom=(80, 300))
         self.gravity = 0
 
-        # self.jump_sound = pygame.mixer.Sound('audio/jump.mp3')
-        # self.jump_sound.set_volume(0.5)
-
     def load_Ninja(self):
         self.player_walk = [self.load_and_scale(f'graphics/player/Ninja/{i}.png', 3) for i in range(8)]
         self.player_jump = self.load_and_scale('graphics/player/Ninja/jump.png', 3)
@@ -44,7 +41,6 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
             self.gravity = -20
-            # self.jump_sound.play()
 
     def apply_gravity(self):
         self.gravity += 1
@@ -142,6 +138,16 @@ def display_high_score(high_score):
     high_score_rect = high_score_surf.get_rect(center=(600, 50))
     screen.blit(high_score_surf, high_score_rect)
 
+def display_rankings(rankings):
+    rankings_surf = test_font.render('Rankings:', False, (255, 255, 255))
+    rankings_rect = rankings_surf.get_rect(center=(400, 50))
+    screen.blit(rankings_surf, rankings_rect)
+    
+    for i, score in enumerate(rankings[:5]):
+        ranking_surf = test_font.render(f'{i + 1}.   {score}', False, (255, 255, 255))
+        ranking_rect = ranking_surf.get_rect(center=(400, 100 + i * 50))
+        screen.blit(ranking_surf, ranking_rect)
+
 def collisions(player, obstacles):
     if obstacles:
         for obstacle_rect in obstacles:
@@ -171,6 +177,7 @@ game_speed = 6
 high_score = 0
 player_choice = None
 selection_message = ""
+rankings = []
 
 # Load all player stand images for selection
 player_stand_images = [
@@ -199,10 +206,10 @@ sky_surfaces = [
 ground_surface = pygame.image.load('graphics/ground.png').convert()
 
 # Intro screen
-game_name = test_font.render('Select character', False, (111, 196, 169))
+game_name = test_font.render('Runner', False, (111, 196, 169))
 game_name_rect = game_name.get_rect(center=(400, 80))
 
-game_message = test_font.render('Press space to start', False, (111, 196, 169))
+game_message = test_font.render('Press space to run', False, (111, 196, 169))
 game_message_rect = game_message.get_rect(center=(400, 380))
 
 start_image = pygame.image.load('graphics/start_btn.png').convert_alpha()
@@ -223,6 +230,7 @@ max_obstacle_timer = 1500  # Thời gian tối đa (mili giây)
 INITIAL_MENU = "initial_menu"
 CHARACTER_SELECTION = "character_selection"
 GAME_PLAYING = "game_playing"
+RANKINGS_DISPLAY = "rankings_display"
 
 game_state = INITIAL_MENU
 
@@ -278,6 +286,9 @@ while True:
                 elif exit_image_rect.collidepoint(event.pos):
                     pygame.quit()
                     exit()
+        elif game_state == RANKINGS_DISPLAY:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                game_state = CHARACTER_SELECTION
 
     if game_state == GAME_PLAYING:
         screen.blit(sky_surfaces[min(score // 20, 3)], (0, 0))
@@ -298,7 +309,11 @@ while True:
         display_high_score(high_score)
         
         if not game_active:
-            game_state = CHARACTER_SELECTION
+            game_state = RANKINGS_DISPLAY
+            rankings.append(score)
+            rankings.sort(reverse=True)
+            if len(rankings) > 5:
+                rankings = rankings[:5]
         
     elif game_state == CHARACTER_SELECTION:
         if score > high_score:
@@ -332,6 +347,13 @@ while True:
         screen.fill((94, 129, 162))
         screen.blit(start_image, start_image_rect)
         screen.blit(exit_image, exit_image_rect)
+    
+    elif game_state == RANKINGS_DISPLAY:
+        screen.fill((94, 129, 162))
+        display_rankings(rankings)
+        rank_message = test_font.render('Press SPACE to go to character selection', False, (111, 196, 169))
+        rank_message_rect = rank_message.get_rect(center=(400, 350))
+        screen.blit(rank_message, rank_message_rect)
 
     pygame.display.update()
     clock.tick(60)
