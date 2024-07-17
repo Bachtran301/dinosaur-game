@@ -188,8 +188,6 @@ for i in range(len(player_stand_images)):
     )
     player_stand_images[i][1].set_colorkey((0, 0, 0))
 
-
-
 # Groups
 player = pygame.sprite.GroupSingle()
 obstacle_group = pygame.sprite.Group()
@@ -204,8 +202,13 @@ ground_surface = pygame.image.load('graphics/ground.png').convert()
 game_name = test_font.render('Select character', False, (111, 196, 169))
 game_name_rect = game_name.get_rect(center=(400, 80))
 
-game_message = test_font.render('Press space to run', False, (111, 196, 169))
-game_message_rect = game_message.get_rect(center=(400, 375))
+game_message = test_font.render('Press space to start', False, (111, 196, 169))
+game_message_rect = game_message.get_rect(center=(400, 380))
+
+start_image = pygame.image.load('graphics/start_btn.png').convert_alpha()
+exit_image = pygame.image.load('graphics/exit_btn.png').convert_alpha()
+start_image_rect = start_image.get_rect(center=(200, 200))
+exit_image_rect = exit_image.get_rect(center=(600, 200))
 
 # Timer
 obstacle_timer = pygame.USEREVENT + 1
@@ -216,13 +219,20 @@ pygame.time.set_timer(coin_timer, 5000)
 min_obstacle_timer = 800  # Thời gian tối thiểu (mili giây)
 max_obstacle_timer = 1500  # Thời gian tối đa (mili giây)
 
+# Game states
+INITIAL_MENU = "initial_menu"
+CHARACTER_SELECTION = "character_selection"
+GAME_PLAYING = "game_playing"
+
+game_state = INITIAL_MENU
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
 
-        if game_active:
+        if game_state == GAME_PLAYING:
             if event.type == obstacle_timer:
                 obstacle_group.add(Obstacle(choice(['fly', 'spikes', 'snail', 'bee', 'worm', 'tooth'])))
                 # Điều chỉnh timer dựa trên điểm số
@@ -240,10 +250,10 @@ while True:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and player.sprite.rect.bottom >= 300:
                     player.sprite.gravity = -20
-        else:
+        elif game_state == CHARACTER_SELECTION:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 if player_choice:
-                    game_active = True
+                    game_state = GAME_PLAYING
                     start_time = int(pygame.time.get_ticks() / 1000)
                     player.add(Player(player_choice))
 
@@ -255,8 +265,21 @@ while True:
                             selection_message = ""
                         else:
                             selection_message = f"{name} requires {required_score} points!"
+        elif game_state == INITIAL_MENU:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_s:
+                    game_state = CHARACTER_SELECTION
+                elif event.key == pygame.K_e:
+                    pygame.quit()
+                    exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if start_image_rect.collidepoint(event.pos):
+                    game_state = CHARACTER_SELECTION
+                elif exit_image_rect.collidepoint(event.pos):
+                    pygame.quit()
+                    exit()
 
-    if game_active:
+    if game_state == GAME_PLAYING:
         screen.blit(sky_surfaces[min(score // 20, 3)], (0, 0))
         screen.blit(ground_surface, (0, 300))
         score = display_score()
@@ -274,7 +297,10 @@ while True:
         collision_coin()
         display_high_score(high_score)
         
-    else:
+        if not game_active:
+            game_state = CHARACTER_SELECTION
+        
+    elif game_state == CHARACTER_SELECTION:
         if score > high_score:
             high_score = score
 
@@ -301,6 +327,11 @@ while True:
             message_surf = test_font.render(selection_message, False, (255, 0, 0))
             message_rect = message_surf.get_rect(center=(400, 320))
             screen.blit(message_surf, message_rect)
+
+    elif game_state == INITIAL_MENU:
+        screen.fill((94, 129, 162))
+        screen.blit(start_image, start_image_rect)
+        screen.blit(exit_image, exit_image_rect)
 
     pygame.display.update()
     clock.tick(60)

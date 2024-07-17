@@ -1,1 +1,4 @@
-# cần update nhân vật có thể bắn ra đạn or laze khi lượm được diamond -> vật thể bắn ra thì phải phá hủy or biến mất vật thể đang di chuyển tới gán phím bắn ra vào nút bất kỳ
+# làm bảng start và exit (high)
+# cần update nhân vật có thể bắn ra đạn or laze khi lượm được diamond -> vật thể bắn ra thì phải phá hủy or biến mất vật thể đang di chuyển tới gán phím bắn ra vào nút bất kỳ (low)
+# bảng rank top 3 điểm cao nhất sau khi chơi (low)
+
