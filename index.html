@@ -9,25 +9,16 @@
     <h1>Pygame Game</h1>
     <div id="pygame-container"></div>
     <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
-    <script type="text/python">
-        import pygame
-        import sys
-        from random import randint, choice
-        import random
-        import os
-        
-        # (Bao gồm script Pygame của bạn ở đây, nhưng với các chỉnh sửa cần thiết)
-        
-        async def main():
-            # Khởi tạo Pyodide
-            pyodide = await pyodide.loadPyodide()
-            pyodide.runPython(`
+    <script type="text/javascript">
+        async function main() {
+            const pyodide = await loadPyodide();
+            await pyodide.runPythonAsync(`
                 import pygame
                 import sys
                 from random import randint, choice
                 import random
                 import os
-                
+
                 class Player(pygame.sprite.Sprite):
                     def __init__(self, character):
                         super().__init__()
@@ -207,7 +198,6 @@
                 sky_surface = pygame.image.load('graphics/Sky.png').convert()
                 ground_surface = pygame.image.load('graphics/ground.png').convert()
 
-                # Đưa vào màn hình khởi đầu
                 player_stand = pygame.image.load('graphics/player/player_stand.png').convert_alpha()
                 player_stand = pygame.transform.rotozoom(player_stand, 0, 2)
                 player_stand_rect = player_stand.get_rect(center=(400, 200))
@@ -286,6 +276,7 @@
                     pygame.display.update()
                     clock.tick(60)
             `)
+        }
         main()
     </script>
 </body>
