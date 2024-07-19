@@ -2,6 +2,7 @@ import pygame
 from sys import exit
 from random import randint, choice
 import random
+import os
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, character):
@@ -11,6 +12,8 @@ class Player(pygame.sprite.Sprite):
             self.load_Ninja()
         elif character == 'Rabbiter':
             self.load_Rabbiter()
+        elif character == '2':
+            self.load_2()
         elif character == 'Villager':
             self.load_Villager()
 
@@ -22,7 +25,9 @@ class Player(pygame.sprite.Sprite):
     def load_Ninja(self):
         self.player_walk = [self.load_and_scale(f'graphics/player/Ninja/{i}.png', 3) for i in range(8)]
         self.player_jump = self.load_and_scale('graphics/player/Ninja/jump.png', 3)
-
+    def load_2(self):
+        self.player_walk = [self.load_and_scale(f'graphics/player/2/{i}.png', 3) for i in range(8)]
+        self.player_jump = self.load_and_scale('graphics/player/2/jump.png', 3)
     def load_Rabbiter(self):
         self.player_walk = [self.load_and_scale(f'graphics/player/Rabbiter/{i}.png', 1) for i in range(3)]
         self.player_jump = self.load_and_scale('graphics/player/Rabbiter/jump.png', 1)
@@ -65,6 +70,7 @@ class Player(pygame.sprite.Sprite):
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, type):
         super().__init__()
+        self.type = type
         y_pos = 300
         if type == 'fly':
             self.frames = [self.load_and_scale(f'graphics/fly/fly{i}.png', 0.75) for i in range(2)]
@@ -177,6 +183,24 @@ def collision_coin():
     if pygame.sprite.spritecollide(player.sprite, coin_group, True):
         start_time -= 2  # cộng điểm khi nhặt coin
 
+def save_high_scores(scores, filename='high_scores.txt'):
+    with open(filename, 'w') as file:
+        for score in scores:
+            file.write(f"{score}\n")
+
+
+def load_high_scores(filename='high_scores.txt'):
+    if not os.path.exists(filename):
+        return []
+    with open(filename, 'r') as file:
+        return [int(line.strip()) for line in file]
+
+def add_score_to_rankings(score, filename='high_scores.txt'):
+    high_scores = load_high_scores(filename)
+    high_scores.append(score)
+    high_scores = sorted(set(high_scores), reverse=True)[:5]
+    save_high_scores(high_scores, filename)
+    
 pygame.init()
 screen = pygame.display.set_mode((800, 400))
 pygame.display.set_caption('Runner')
@@ -207,10 +231,7 @@ for i in range(len(player_stand_images)):
     )
     player_stand_images[i][1].set_colorkey((0, 0, 0))
 
-# Groups
-player = pygame.sprite.GroupSingle()
-obstacle_group = pygame.sprite.Group()
-coin_group = pygame.sprite.Group()
+
 
 sky_surfaces = [
     pygame.image.load(f'graphics/Sky{i}.png').convert() for i in range(1, 5)
@@ -229,26 +250,36 @@ exit_image = pygame.image.load('graphics/exit_btn.png').convert_alpha()
 start_image_rect = start_image.get_rect(center=(200, 200))
 exit_image_rect = exit_image.get_rect(center=(600, 200))
 
+# Groups
+player = pygame.sprite.GroupSingle()
+obstacle_group = pygame.sprite.Group()
+coin_group = pygame.sprite.Group()
+
 # Timer
 obstacle_timer = pygame.USEREVENT + 1
-coin_timer = pygame.USEREVENT + 2
 pygame.time.set_timer(obstacle_timer, 1500)
+
+coin_timer = pygame.USEREVENT + 2
 pygame.time.set_timer(coin_timer, 5000)
 
 min_obstacle_timer = 800  # Thời gian tối thiểu (mili giây)
 max_obstacle_timer = 1500  # Thời gian tối đa (mili giây)
+
+# Load high scores
+high_scores = load_high_scores()
+
 
 # Game states
 INITIAL_MENU = "initial_menu"
 CHARACTER_SELECTION = "character_selection"
 GAME_PLAYING = "game_playing"
 RANKINGS_DISPLAY = "rankings_display"
-
 game_state = INITIAL_MENU
 
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            save_high_scores(high_scores)
             pygame.quit()
             exit()
 
@@ -303,7 +334,7 @@ while True:
                 game_state = CHARACTER_SELECTION
 
     if game_state == GAME_PLAYING:
-        screen.blit(sky_surfaces[min(score // 20, 3)], (0, 0))
+        screen.blit(sky_surfaces[min(score // 10, 3)], (0, 0))
         screen.blit(ground_surface, (0, 300))
         score = display_score()
 
@@ -330,7 +361,7 @@ while True:
     elif game_state == CHARACTER_SELECTION:
         if score > high_score:
             high_score = score
-
+        
         screen.fill((94, 129, 162))
         screen.blit(game_name, game_name_rect)
         screen.blit(game_message, game_message_rect)
@@ -362,7 +393,11 @@ while True:
     
     elif game_state == RANKINGS_DISPLAY:
         screen.fill((94, 129, 162))
-        display_rankings(rankings)
+        add_score_to_rankings(score)
+        high_scores = load_high_scores()  # Cập nhật danh sách điểm cao sau khi thêm điểm mới
+        display_high_score(max(high_scores))
+        display_rankings(high_scores)
+        #display_rankings(rankings)
         #rank_message = test_font.render('Press SPACE to go to character selection', False, (111, 196, 169))
         #rank_message_rect = rank_message.get_rect(center=(400, 350))
         #screen.blit(rank_message, rank_message_rect)
