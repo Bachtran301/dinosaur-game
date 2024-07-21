@@ -84,6 +84,10 @@ Run the game by executing:
 This game was created using Pygame. Character and obstacle sprites are custom-made for this project.
 
 ## License
+<<<<<<< HEAD
+=======
+123
+>>>>>>> 8e392a9306ac1ec3b6788701ea8f89da8e30a699
 
 A selection of major edit studios, publishers, etc. using GitHub:
 
