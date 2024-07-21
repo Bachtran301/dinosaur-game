@@ -8,6 +8,7 @@ from score_submitter import submit_score, get_high_scores
 class Player(pygame.sprite.Sprite):
     def __init__(self, character):
         super().__init__()
+        # nhân vật
         self.character = character
         if character == 'Ninja':
             self.load_Ninja()
