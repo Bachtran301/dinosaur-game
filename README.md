@@ -1,6 +1,7 @@
 # Games <img src="http://i.imgur.com/Cj4rMrS.gif" height="40" alt="Swimming Octocat" title="Games on GitHub">
 
 # Runner #
+[![GitHub stars](https://img.shields.io/github/stars/Bachtran301/dinosaur-game.svg)](https://github.com/Bachtran301/dinosaur-game/stargazers) [![GitHub forks](https://img.shields.io/github/forks/Bachtran301/dinosaur-game.svg)](https://github.com/Bachtran301/dinosaur-game/network) [![GitHub license](https://img.shields.io/github/license/Bachtran301/dinosaur-game.svg)](https://github.com/Bachtran301/dinosaur-game/blob/master/LICENSE)
 
 ## Introduction 
 
@@ -27,7 +28,9 @@ Runner is an exciting 2D platformer game built with Pygame. Players control a ch
 pip install pygame-ce
 ```
 3. Clone this repository or download the source code.
-
+```
+git clone https://github.com/Bachtran301/dinosaur-game.git
+```
 ## How to run game
 1. To view the high score table, follow these steps:
 ```
@@ -74,7 +77,7 @@ python main.py
 - Dynamic background that changes based on score
 
 ### Audio
-(Note: Audio implementation is mentioned as a placeholder in the original code)
+
 
 ## Customization
 
@@ -96,8 +99,7 @@ python main.py
 
 This game was created using Pygame. Character and obstacle sprites are custom-made for this project.
 
-## License
-
+# Major Companies
 
 A selection of major edit studios, publishers, etc. using GitHub:
 
