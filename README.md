@@ -18,6 +18,7 @@ Runner is an exciting 2D platformer game built with Pygame. Players control a ch
 ## Installation
 
 1. Ensure you have Python installed on your system.
+| Badge                                                                                                                | URL                                                                                                      |
 2. Install Pygame:
 ```
 pip install pygame-ce
@@ -25,9 +26,9 @@ pip install pygame-ce
 3. Clone this repository or download the source code.
 
 ## Usage
-
-Run the game by executing:
-
+```
+python main.py
+```
 ## Game Structure
 
 ### Player Class
