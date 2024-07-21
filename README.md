@@ -28,10 +28,17 @@ pip install pygame-ce
 ```
 3. Clone this repository or download the source code.
 
-## Usage
+## How to run game
+1. To view the high score table, follow these steps:
+```
+python app.py
+```
+2. Run game:
 ```
 python main.py
 ```
+## How to play game
+<kbd>Space</kbd>: Jump
 ## Game Structure
 
 ### Player Class
