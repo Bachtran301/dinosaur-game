@@ -1,9 +1,11 @@
 # Games <img src="http://i.imgur.com/Cj4rMrS.gif" height="40" alt="Swimming Octocat" title="Games on GitHub">
 
 # Runner #
-[![GitHub stars](https://img.shields.io/github/stars/Bachtran301/dinosaur-game.svg)](https://github.com/Bachtran301/dinosaur-game/stargazers) [![GitHub forks](https://img.shields.io/github/forks/Bachtran301/dinosaur-game.svg)](https://github.com/Bachtran301/dinosaur-game/network) [![GitHub license](https://img.shields.io/github/license/Bachtran301/dinosaur-game.svg)](https://github.com/Bachtran301/dinosaur-game/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/Bachtran301/dinosaur-game.svg)](https://github.com/Bachtran301/dinosaur-game/stargazers) [![GitHub forks](https://img.shields.io/github/forks/Bachtran301/dinosaur-game.svg)](https://github.com/Bachtran301/dinosaur-game/network)
 
 ## Introduction 
+
+![chrome offline game cast](images/screenshot.gif)
 
 Runner is an exciting 2D platformer game built with Pygame. Players control a character who must jump over obstacles and collect coins while running through an ever-changing landscape.
 
