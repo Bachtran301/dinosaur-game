@@ -3,6 +3,7 @@ from sys import exit
 from random import randint, choice
 import random
 import os
+from score_submitter import submit_score, get_high_scores
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, character):
@@ -149,21 +150,23 @@ def display_rankings(rankings):
     rankings_rect = rankings_surf.get_rect(center=(400, 50))
     screen.blit(rankings_surf, rankings_rect)
     
-    rank_column_surf = test_font.render('Rank', False, (255, 255, 255))
-    rank_column_rect = rank_column_surf.get_rect(center=(300, 100))
-    screen.blit(rank_column_surf, rank_column_rect)
-    
-    score_column_surf = test_font.render('Score', False, (255, 255, 255))
-    score_column_rect = score_column_surf.get_rect(center=(500, 100))
-    screen.blit(score_column_surf, score_column_rect)
+    columns = [('Rank', 200), ('Name', 400), ('Score', 600)]
+    for title, x in columns:
+        surf = test_font.render(title, False, (255, 255, 255))
+        rect = surf.get_rect(center=(x, 100))
+        screen.blit(surf, rect)
     
     for i, score in enumerate(rankings[:5]):
         rank_surf = test_font.render(f'{i + 1}', False, (255, 255, 255))
-        rank_rect = rank_surf.get_rect(center=(300, 150 + i * 50))
+        rank_rect = rank_surf.get_rect(center=(200, 150 + i * 50))
         screen.blit(rank_surf, rank_rect)
         
-        score_surf = test_font.render(f'{score}', False, (255, 255, 255))
-        score_rect = score_surf.get_rect(center=(500, 150 + i * 50))
+        name_surf = test_font.render(score['player_name'], False, (255, 255, 255))
+        name_rect = name_surf.get_rect(center=(400, 150 + i * 50))
+        screen.blit(name_surf, name_rect)
+        
+        score_surf = test_font.render(f'{score["score"]}', False, (255, 255, 255))
+        score_rect = score_surf.get_rect(center=(600, 150 + i * 50))
         screen.blit(score_surf, score_rect)
 
 def collisions(player, obstacles):
@@ -201,6 +204,19 @@ def add_score_to_rankings(score, filename='high_scores.txt'):
     high_scores = sorted(set(high_scores), reverse=True)[:5]
     save_high_scores(high_scores, filename)
     
+def handle_name_input(event):
+    global player_name, game_state, name_input_active
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_RETURN:
+            if player_name:
+                game_state = INITIAL_MENU
+                name_input_active = False
+        elif event.key == pygame.K_BACKSPACE:
+            player_name = player_name[:-1]
+        else:
+            if len(player_name) < 10:  # Giới hạn độ dài tên
+                player_name += event.unicode
+            
 pygame.init()
 screen = pygame.display.set_mode((800, 400))
 pygame.display.set_caption('Runner')
@@ -214,6 +230,7 @@ high_score = 0
 player_choice = None
 selection_message = ""
 rankings = []
+
 
 # Load all player stand images for selection
 player_stand_images = [
@@ -275,6 +292,10 @@ CHARACTER_SELECTION = "character_selection"
 GAME_PLAYING = "game_playing"
 RANKINGS_DISPLAY = "rankings_display"
 game_state = INITIAL_MENU
+NAME_INPUT = "name_input"
+game_state = NAME_INPUT  # Bắt đầu với trạng thái nhập tên
+player_name = ""
+name_input_active = True
 
 while True:
     for event in pygame.event.get():
@@ -282,8 +303,9 @@ while True:
             save_high_scores(high_scores)
             pygame.quit()
             exit()
-
-        if game_state == GAME_PLAYING:
+        if game_state == NAME_INPUT:
+            handle_name_input(event)
+        elif game_state == GAME_PLAYING:
             if event.type == obstacle_timer:
                 obstacle_group.add(Obstacle(choice(['fly', 'spikes', 'snail', 'bee', 'worm', 'tooth'])))
                 # Điều chỉnh timer dựa trên điểm số
@@ -332,8 +354,17 @@ while True:
         elif game_state == RANKINGS_DISPLAY:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_state = CHARACTER_SELECTION
+    if game_state == NAME_INPUT:
+        screen.fill((94, 129, 162))
+        name_prompt = test_font.render('Enter your name:', False, (255, 255, 255))
+        screen.blit(name_prompt, (300, 150))
+        name_surface = test_font.render(player_name, False, (255, 255, 255))
+        screen.blit(name_surface, (300, 200))
+        if pygame.time.get_ticks() % 1000 < 500:  # Nhấp nháy con trỏ
+            pygame.draw.line(screen, (255, 255, 255), (300 + name_surface.get_width(), 200),(300 + name_surface.get_width(), 240), 2)
+        
 
-    if game_state == GAME_PLAYING:
+    elif game_state == GAME_PLAYING:
         screen.blit(sky_surfaces[min(score // 10, 3)], (0, 0))
         screen.blit(ground_surface, (0, 300))
         score = display_score()
@@ -353,11 +384,16 @@ while True:
         
         if not game_active:
             game_state = RANKINGS_DISPLAY
-            rankings.append(score)
-            rankings.sort(reverse=True)
+            new_score = {"player_name": player_name, "score": score}
+            rankings = [{"player_name": "Unknown", "score": s} if isinstance(s, int) else s for s in rankings]
+            rankings.append(new_score)
+            rankings.sort(key=lambda x: x["score"], reverse=True)
             if len(rankings) > 5:
                 rankings = rankings[:5]
-        
+            submit_score(player_name, score)  # Thay "Player" bằng tên người chơi thực tế
+            high_scores = get_high_scores()
+            # Cập nhật rankings từ high_scores
+            rankings = high_scores
     elif game_state == CHARACTER_SELECTION:
         if score > high_score:
             high_score = score
@@ -394,8 +430,8 @@ while True:
     elif game_state == RANKINGS_DISPLAY:
         screen.fill((94, 129, 162))
         add_score_to_rankings(score)
-        high_scores = load_high_scores()  # Cập nhật danh sách điểm cao sau khi thêm điểm mới
-        display_high_score(max(high_scores))
+        high_scores = get_high_scores()  # Cập nhật danh sách điểm cao sau khi thêm điểm mới
+        display_high_score(max(score['score'] for score in high_scores) if high_scores else 0)
         display_rankings(high_scores)
         #display_rankings(rankings)
         #rank_message = test_font.render('Press SPACE to go to character selection', False, (111, 196, 169))

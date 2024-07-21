@@ -1,77 +1,89 @@
-# Games on GitHub <img src="http://i.imgur.com/Cj4rMrS.gif" height="40" alt="Swimming Octocat" title="Games on GitHub">
+# Games <img src="http://i.imgur.com/Cj4rMrS.gif" height="40" alt="Swimming Octocat" title="Games on GitHub">
 
-# Ninja Jumper
-
-Contents:
-- [Introduction]
-- [Installation]
-- [Usage]
-- [Environments]
-- [Design and Customization]
-- [Troubleshooting]
-- [Game Mechanics]
-- [Audio]
-- [Troubleshooting]
+# Runner
 
 ## Introduction
 
-A brief overview of the game Ninja Jumper, which involves a player character avoiding obstacles by jumping.
+Runner is an exciting 2D platformer game built with Pygame. Players control a character who must jump over obstacles and collect coins while running through an ever-changing landscape.
 
-<p align="center">
-    <img src="images/Lobby.jpg" width=260 alt="1">
-    <img src="images/Run_game_1.jpg" width=260 alt="2">
-    <img src="images/Run_game_2.jpg" width=260 alt="3">
-    <img src="images/Run_game_3.jpg" width=260 alt="4">
-    <img src="images/End_game.jpg" width=260 alt="4">
-</p>
+## Features
+
+- Multiple playable characters with unique animations
+- Dynamic obstacle and coin spawning
+- Increasing difficulty as the game progresses
+- High score tracking and rankings system
+- Character selection menu
+- Multiple background environments
 
 ## Installation
 
-Instructions on how to install necessary dependencies, such as Pygame.
+1. Ensure you have Python installed on your system.
+2. Install Pygame:
+pip install pygame
+3. Clone this repository or download the source code.
 
 ## Usage
 
-Run the game
+Run the game by executing:
 
-## Environments
+## Game Structure
 
-Description of the different environments in the game (sky, ground, intro screen).
+### Player Class
+- Manages player character animations and movement
+- Handles gravity and jumping mechanics
 
-## Design and Customization
+### Obstacle Class
+- Creates various obstacles (fly, spikes, snail, tooth, bee, worm)
+- Manages obstacle animations and movement
 
-A. Player Character
-    Initialization and animation frames of the player character.
-B. Obstacles
-    Initialization and animation frames of various obstacles (fly, ufo, snail, cactus, zombie).
-C. Background and Ground
-    Loading and displaying the sky and ground surfaces.
-D. Intro Screen
-    Displaying the intro screen with game name and instructions.
+### Coin Class
+- Spawns gold and diamond coins
+- Handles coin movement and collection
 
-## Game Mechanics
+### Game States
+1. Name Input: Players enter their name
+2. Initial Menu: Start or exit the game
+3. Character Selection: Choose a character to play
+4. Game Playing: Main gameplay loop
+5. Rankings Display: Show high scores after game over
 
-A. Player Input and Gravity
-    Handling player input for jumping and applying gravity.
-B. Animation States
-    Updating the animation state of the player and obstacles.
-C. Collision Detection
-    Checking for collisions between the player and obstacles.
-D. Scoring System
-    Displaying and updating the player's score.
-E. Obstacle Spawning
-    Spawning obstacles at regular intervals
+### Game Mechanics
 
-## Audio
+- **Scoring**: Based on survival time and coin collection
+- **Difficulty Progression**: Obstacles spawn more frequently as score increases
+- **Collision Detection**: Between player, obstacles, and coins
+- **High Score System**: Tracks and displays top scores
 
-Placeholder for background music and jump sound effects
+### Graphics and Animation
+
+- Multiple character sprites with walking and jumping animations
+- Various obstacle types with unique animations
+- Dynamic background that changes based on score
+
+### Audio
+(Note: Audio implementation is mentioned as a placeholder in the original code)
+
+## Customization
+
+- New characters can be added by creating appropriate sprite sheets and updating the `Player` class
+- Additional obstacles can be introduced by adding new entries to the `Obstacle` class
 
 ## Troubleshooting
 
-Common issues and their solutions (e.g., missing files, Pygame installation problems).
+- Ensure all image files are in the correct directories
+- Check Pygame installation if you encounter import errors
 
--------
+## Future Enhancements
 
-# Major Companies
+- Implement background music and sound effects
+- Add power-ups and special abilities for characters
+- Create more diverse environments and obstacles
+
+## Credits
+
+This game was created using Pygame. Character and obstacle sprites are custom-made for this project.
+
+## License
 
 A selection of major edit studios, publishers, etc. using GitHub:
 
