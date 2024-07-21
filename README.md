@@ -51,14 +51,32 @@ python main.py
 - Handles gravity and jumping mechanics
 
 ### Obstacle Class
+
+<p align="center">
+<img src="./images/obstacle.png">
+</p>
+
 - Creates various obstacles (fly, spikes, snail, tooth, bee, worm)
 - Manages obstacle animations and movement
 
 ### Coin Class
+
+<p align="center">
+<img src="./images/coin.png">
+</p>
+
 - Spawns gold and diamond coins
 - Handles coin movement and collection
 
 ### Game States
+
+<p align="center"> 
+<img src="./images/menu.png">
+<img src="./images/character_selection.png">
+<img src="./images/game_playing.png">
+<img src="./images/rank.png">
+</p>
+
 1. Name Input: Players enter their name
 2. Initial Menu: Start or exit the game
 3. Character Selection: Choose a character to play
