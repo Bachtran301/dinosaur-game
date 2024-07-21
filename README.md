@@ -1,8 +1,8 @@
 # Games <img src="http://i.imgur.com/Cj4rMrS.gif" height="40" alt="Swimming Octocat" title="Games on GitHub">
 
-# Runner
+# Runner #
 
-## Introduction
+## Introduction 
 
 Runner is an exciting 2D platformer game built with Pygame. Players control a character who must jump over obstacles and collect coins while running through an ever-changing landscape.
 
@@ -84,10 +84,7 @@ Run the game by executing:
 This game was created using Pygame. Character and obstacle sprites are custom-made for this project.
 
 ## License
-<<<<<<< HEAD
-=======
-123
->>>>>>> 8e392a9306ac1ec3b6788701ea8f89da8e30a699
+
 
 A selection of major edit studios, publishers, etc. using GitHub:
 
