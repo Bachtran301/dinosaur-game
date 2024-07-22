@@ -70,12 +70,16 @@ python main.py
 
 ### Game States
 
-<p align="center"> 
-<img src="./images/menu.png">
-<img src="./images/name_input.png">
-<img src="./images/character_selection.png">
-<img src="./images/game_playing.png">
-<img src="./images/rank.png">
+<p align="center">
+    <a href="./images/menu.png">Français</a>
+    .
+    <a href="./images/name_input.png">Français</a>
+    .
+    <a href="./images/character_selection.png">Français</a>
+    .
+    .<a href="./images/game_playing.png">Français</a>
+    .
+    <a href="./images/rank.png">Français</a>
 </p>
 
 1. Initial Menu: Start or exit the game
