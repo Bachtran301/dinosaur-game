@@ -91,6 +91,10 @@ python main.py
 
 <img src="./images/rank.png">
 
+6. Achieve high scores to unlock new characters
+
+<img src="./images/unclock_character.png">
+
 </p>
 
 ### Website High Scores
@@ -106,7 +110,7 @@ python main.py
 - **Scoring**: Based on survival time and coin collection
 - **Difficulty Progression**: Obstacles spawn more frequently as score increases
 - **Collision Detection**: Between player, obstacles, and coins
-- **High Score System**: Tracks and displays top scores
+- **High Score System**: Initial Menu, Name Input, Character Selection, Game Playing, Rankings Display, Unclock new characters
 
 ### Graphics and Animation
 
@@ -117,10 +121,12 @@ python main.py
 ### Audio
 
 
+
 ## Customization
 
 - New characters can be added by creating appropriate sprite sheets and updating the `Player` class
 - Additional obstacles can be introduced by adding new entries to the `Obstacle` class
+- Adjust required scores for unlocking characters in `player_stand_images`
 
 ## Troubleshooting
 
@@ -136,6 +142,10 @@ python main.py
 ## Credits
 
 This game was created using Pygame. Character and obstacle sprites are custom-made for this project.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
 
 # Major Companies
 
