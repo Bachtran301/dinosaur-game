@@ -1,4 +1,4 @@
-# Runner # <img src="http://i.imgur.com/Cj4rMrS.gif" height="40" alt="Swimming Octocat" title="Games on GitHub">
+# Runner <img src="http://i.imgur.com/Cj4rMrS.gif" height="40" alt="Swimming Octocat" title="Games on GitHub">
 [![GitHub stars](https://img.shields.io/github/stars/Bachtran301/dinosaur-game.svg)](https://github.com/Bachtran301/dinosaur-game/stargazers) [![GitHub forks](https://img.shields.io/github/forks/Bachtran301/dinosaur-game.svg)](https://github.com/Bachtran301/dinosaur-game/network)
 
 ## Introduction 
