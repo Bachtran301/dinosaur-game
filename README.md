@@ -69,8 +69,8 @@ python main.py
 - Handles coin movement and collection
 
 ### Game States
-
 <p align="center">
+
 1. Initial Menu: Start or exit the game
 
 <img src="./images/menu.png">
