@@ -72,15 +72,25 @@ python main.py
 
 <p align="center">
 1. Initial Menu: Start or exit the game
+
 <img src="./images/menu.png">
+
 2. Name Input: Players enter their name
+
 <img src="./images/name_input.png">
+
 3. Character Selection: Choose a character to play
+
 <img src="./images/character_selection.png">
+
 4. Game Playing: Main gameplay loop
+
 <img src="./images/game_playing.png">
+
 5. Rankings Display: Show high scores after game over
+
 <img src="./images/rank.png">
+
 </p>
 
 ### Website High Scores
