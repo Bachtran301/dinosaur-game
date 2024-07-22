@@ -71,18 +71,15 @@ python main.py
 ### Game States
 
 <p align="center">
-    <a href="./images/menu.png">Français</a>
-    .
-    <a href="./images/name_input.png">Français</a>
-    .
-    <a href="./images/character_selection.png">Français</a>
-    .
-    .<a href="./images/game_playing.png">Français</a>
-    .
-    <a href="./images/rank.png">Français</a>
+
+<img src="./images/name_input.png">
+<img src="./images/character_selection.png">
+<img src="./images/game_playing.png">
+<img src="./images/rank.png">
 </p>
 
 1. Initial Menu: Start or exit the game
+<img src="./images/menu.png">
 2. Name Input: Players enter their name
 3. Character Selection: Choose a character to play
 4. Game Playing: Main gameplay loop
