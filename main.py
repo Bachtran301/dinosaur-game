@@ -203,7 +203,8 @@ class Coin(pygame.sprite.Sprite):
         self.rect.x -= 6
         self.destroy()
 
-    def destroy(self): 
+    def destroy(self):
+        if self.rect.x <= -100:
             self.kill()
 
 def display_score():
