@@ -10,6 +10,8 @@ screen = pygame.display.set_mode((800, 400))
 pygame.display.set_caption('Runner')
 clock = pygame.time.Clock()
 test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
+bg_music = pygame.mixer.Sound('audio/music.wav')
+bg_music.play(loops = -1)
 
 # Game states
 INITIAL_MENU = "initial_menu"
@@ -85,8 +87,6 @@ class Player(pygame.sprite.Sprite):
             self.load_Ninja()
         elif character == 'Rabbiter':
             self.load_Rabbiter()
-        elif character == '2':
-            self.load_2()
         elif character == 'Villager':
             self.load_Villager()
 
@@ -98,19 +98,22 @@ class Player(pygame.sprite.Sprite):
     def load_Ninja(self):
         self.player_walk = [self.load_and_scale(f'graphics/player/Ninja/{i}.png', 3) for i in range(8)]
         self.player_jump = self.load_and_scale('graphics/player/Ninja/jump.png', 3)
-    
-    def load_2(self):
-        self.player_walk = [self.load_and_scale(f'graphics/player/2/{i}.png', 3) for i in range(8)]
-        self.player_jump = self.load_and_scale('graphics/player/2/jump.png', 3)
-    
+        self.load_jump_sound()
+
     def load_Rabbiter(self):
         self.player_walk = [self.load_and_scale(f'graphics/player/Rabbiter/{i}.png', 1) for i in range(3)]
         self.player_jump = self.load_and_scale('graphics/player/Rabbiter/jump.png', 1)
-
+        self.load_jump_sound()
+        
     def load_Villager(self):
         self.player_walk = [self.load_and_scale(f'graphics/player/Villager/{i}.png', 0.5) for i in range(4)]
         self.player_jump = self.load_and_scale('graphics/player/Villager/jump.png', 0.5)
-
+        self.load_jump_sound()
+        
+    def load_jump_sound(self):
+        self.jump_sound = pygame.mixer.Sound('audio/jump.mp3')
+        self.jump_sound.set_volume(0.5)
+    
     def load_and_scale(self, path, scale):
         img = pygame.image.load(path).convert_alpha()
         img = pygame.transform.scale(img, (img.get_width() * scale, img.get_height() * scale))
@@ -121,6 +124,7 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] and self.rect.bottom >= 300:
             self.gravity = -20
+            self.jump_sound.play()
 
     def apply_gravity(self):
         self.gravity += 1
