@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify, send_from_directory, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-import os
+#import os
 
 app = Flask(__name__, static_folder='static', template_folder='.')
 
@@ -52,6 +52,4 @@ def init_db():
 
 if __name__ == '__main__':
     init_db()
-    port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True, host='0.0.0.0', port=port)
-    #app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
