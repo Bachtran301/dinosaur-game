@@ -11,6 +11,7 @@ pygame.display.set_caption('Runner')
 clock = pygame.time.Clock()
 test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
 bg_music = pygame.mixer.Sound('audio/music.wav')
+bg_music.set_volume(0.1)
 bg_music.play(loops = -1)
 
 # Game states
@@ -112,7 +113,7 @@ class Player(pygame.sprite.Sprite):
         
     def load_jump_sound(self):
         self.jump_sound = pygame.mixer.Sound('audio/jump.mp3')
-        self.jump_sound.set_volume(0.5)
+        self.jump_sound.set_volume(0.3)
     
     def load_and_scale(self, path, scale):
         img = pygame.image.load(path).convert_alpha()
