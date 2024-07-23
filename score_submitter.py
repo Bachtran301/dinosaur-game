@@ -1,6 +1,6 @@
 import requests
 
-API_URL = "http://localhost:5000"  # Thay đổi URL này khi triển khai lên server thật
+API_URL = "https://dinosaur-game.onrender.com/"  # Thay đổi URL này khi triển khai lên server thật
 
 def submit_score(player_name, score):
     url = f"{API_URL}/submit_score"
