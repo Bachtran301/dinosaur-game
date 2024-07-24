@@ -22,7 +22,7 @@ Runner is an exciting 2D platformer game built with Pygame. Players control a ch
 
 | Badge                                                                                                                 | URL                                                                                                       |
 | --------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| <img src="https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue" /> | `https://www.python.org/downloads/` |
+| <img src="https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue" /> | https://www.python.org/downloads/ |
 2. Install Pygame:
 ```
 pip install pygame-ce
@@ -99,7 +99,7 @@ python main.py
 
 - Show history rank
 
-(https://dinosaur-game.onrender.com/)
+https://dinosaur-game.onrender.com/
 
 <p align="center">
 <img src="./images/high_scores.png">
