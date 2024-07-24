@@ -371,7 +371,7 @@ while True:
         for _, img, pos, _ in player_stand_images:
             screen.blit(img, img.get_rect(center=pos))
 
-        score_message = test_font.render(f'High score: {high_score}', False, (111, 196, 169))
+        score_message = test_font.render(f'High score: {score}', False, (111, 196, 169))
         score_message_rect = score_message.get_rect(center=(400, 120))
         screen.blit(score_message, score_message_rect)
 
