@@ -99,6 +99,8 @@ python main.py
 
 - Show history rank
 
+`https://dinosaur-game.onrender.com/`
+
 <p align="center">
 <img src="./images/high_scores.png">
 </p>
