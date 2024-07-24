@@ -413,6 +413,7 @@ while True:
             submit_score(player_name, score)
             high_scores = get_high_scores()
             rankings = high_scores
+            high_score = max(high_score, score)
     elif game_state == RANKINGS_DISPLAY:
         screen.fill((94, 129, 162))
         add_score_to_rankings(score)
