@@ -3,4 +3,4 @@ services:
     name: myapp
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn wsgi:app
+    startCommand: gunicorn main:app
