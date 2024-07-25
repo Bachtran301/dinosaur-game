@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: yourappname
+    name: myapp
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn wsgi:app

@@ -1,0 +1,5 @@
+{'_id': '66a123f4167ba9cefde72076', 'player_name': 'bach', 'score': 75}
+{'_id': '66a12558167ba9cefde72079', 'player_name': 'tien', 'score': 58}
+{'_id': '66a1259b167ba9cefde7207a', 'player_name': 'hello', 'score': 48}
+{'_id': '66a154022731b4ab93ce1021', 'player_name': 'fg123', 'score': 43}
+{'_id': '66a153202731b4ab93ce1020', 'player_name': 'fg123', 'score': 42}
