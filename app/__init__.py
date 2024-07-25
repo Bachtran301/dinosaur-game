@@ -15,7 +15,7 @@ def create_app():
     
     CORS(app)
 
-    env = os.environ.get('FLASK_ENV', 'default')
+    env = os.environ.get('FLASK_ENV', 'production')
     app.config.from_object(config[env])
 
     mongo_uri = os.environ.get('MONGO_URI')
