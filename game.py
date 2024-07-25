@@ -445,10 +445,11 @@ while True:
             high_score = max(high_score, score)
     elif game_state == RANKINGS_DISPLAY:
         screen.fill((94, 129, 162))
-        add_score_to_rankings({"player_name": player_name, "score": score})
+        add_score_to_rankings(score)
         high_scores = get_high_scores()
         display_high_score(max(score['score'] for score in high_scores) if high_scores else 0)
         display_rankings(high_scores)
 
     pygame.display.update()
     clock.tick(60)
+    #hello world 123
