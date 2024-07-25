@@ -268,13 +268,42 @@ def load_high_scores(filename='high_scores.txt'):
     if not os.path.exists(filename):
         return []
     with open(filename, 'r') as file:
-        return [int(line.strip()) for line in file]
+        high_scores = []
+        for line in file:
+            try:
+                score_data = eval(line.strip())
+                if isinstance(score_data, dict) and 'player_name' in score_data and 'score' in score_data:
+                    high_scores.append(score_data)
+                elif isinstance(score_data, int):
+                    high_scores.append({"player_name": "Unknown", "score": score_data})
+            except:
+                print(f"Invalid line in high scores file: {line}")
+        return high_scores
 
-def add_score_to_rankings(score, filename='high_scores.txt'):
+def add_score_to_rankings(new_score, filename='high_scores.txt'):
     high_scores = load_high_scores(filename)
-    high_scores.append(score)
-    high_scores = sorted(set(high_scores), reverse=True)[:5]
+    
+    # Thêm điểm số mới
+    high_scores.append(new_score)
+    
+    # Sắp xếp theo điểm số giảm dần
+    high_scores = sorted(high_scores, key=lambda x: x['score'], reverse=True)
+    
+    # Loại bỏ các bản ghi trùng lặp, giữ lại bản ghi đầu tiên (điểm cao nhất) cho mỗi người chơi
+    seen_players = set()
+    unique_scores = []
+    for score in high_scores:
+        if score['player_name'] not in seen_players:
+            unique_scores.append(score)
+            seen_players.add(score['player_name'])
+    
+    # Giữ lại top 5 điểm cao nhất
+    high_scores = unique_scores[:5]
+    
+    # Lưu điểm cao mới
     save_high_scores(high_scores, filename)
+    
+    return high_scores
     
 def handle_name_input(event):
     global player_name, game_state, name_input_active
@@ -416,11 +445,10 @@ while True:
             high_score = max(high_score, score)
     elif game_state == RANKINGS_DISPLAY:
         screen.fill((94, 129, 162))
-        add_score_to_rankings(score)
+        add_score_to_rankings({"player_name": player_name, "score": score})
         high_scores = get_high_scores()
         display_high_score(max(score['score'] for score in high_scores) if high_scores else 0)
         display_rankings(high_scores)
 
     pygame.display.update()
     clock.tick(60)
-    #hello world 123
