@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: dinosaur-game
+    name: yourappname
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn wsgi:app
