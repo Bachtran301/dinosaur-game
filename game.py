@@ -242,11 +242,11 @@ def display_score():
 
 def display_high_score(high_score):
     high_score_surf = test_font.render(f'High Score: {high_score}', False, (255, 255, 255))
-    high_score_rect = high_score_surf.get_rect(center=(600, 50))
+    high_score_rect = high_score_surf.get_rect(center=(610, 50))
     screen.blit(high_score_surf, high_score_rect)
 
 def display_rankings(rankings):
-    rankings_surf = test_font.render('Rankings:', False, (255, 255, 255))
+    rankings_surf = test_font.render('Rankings', False, (255, 255, 255))
     rankings_rect = rankings_surf.get_rect(center=(400, 50))
     screen.blit(rankings_surf, rankings_rect)
     
@@ -387,10 +387,10 @@ while True:
                         game_state = GAME_PLAYING
                         pause_duration += int(pygame.time.get_ticks() / 1000) - pause_start_time
                         pause_start_time = 0
-                elif player.sprite.rect.collidepoint(event.pos) and player.sprite.rect.bottom >= 300:
+                elif not game_paused and player.sprite.rect.collidepoint(event.pos) and player.sprite.rect.bottom >= 300:
                     player.sprite.gravity = -20
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and player.sprite.rect.bottom >= 300:
+                if not game_paused and event.key == pygame.K_SPACE and player.sprite.rect.bottom >= 300:
                     player.sprite.gravity = -20
             if not game_paused:
                 if event.type == obstacle_timer:
@@ -403,7 +403,7 @@ while True:
                     else:
                         coin_group.add(Coin('gold'))
         elif game_state == GAME_PAUSED:
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 game_paused = False
                 game_state = GAME_PLAYING
                 start_time += int(pygame.time.get_ticks() / 1000) - pause_start_time
@@ -500,7 +500,7 @@ while True:
         pause_rect = pause_text.get_rect(center=(400, 200))
         screen.blit(pause_text, pause_rect)
         
-        continue_text = test_font.render('Press SPACE to continue', False, (111, 196, 169))
+        continue_text = test_font.render('Click anywhere to continue', False, (111, 196, 169))
         continue_rect = continue_text.get_rect(center=(400, 250))
         screen.blit(continue_text, continue_rect)
     elif game_state == RANKINGS_DISPLAY:
@@ -528,7 +528,7 @@ while True:
         copy_rect = copy_surf.get_rect(center=(400, 250))
         screen.blit(copy_surf, copy_rect)
 
-        continue_surf = test_font.render('Press SPACE to continue', False, (255, 255, 255))
+        continue_surf = test_font.render('Press SPACE to continue', False, (111, 196, 169))
         continue_rect = continue_surf.get_rect(center=(400, 300))
         screen.blit(continue_surf, continue_rect)
 
