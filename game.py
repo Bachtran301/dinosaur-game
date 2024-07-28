@@ -4,6 +4,7 @@ from random import randint, choice
 import random
 import os
 from app.utils import submit_score, get_high_scores
+import pyperclip
 
 pygame.init()
 screen = pygame.display.set_mode((800, 400))
@@ -20,6 +21,7 @@ NAME_INPUT = "name_input"
 CHARACTER_SELECTION = "character_selection"
 GAME_PLAYING = "game_playing"
 RANKINGS_DISPLAY = "rankings_display"
+LINK_DISPLAY = "link_display"
 game_state = INITIAL_MENU
 
 # Game variables
@@ -33,6 +35,8 @@ selection_message = ""
 rankings = []
 player_name = ""
 name_input_active = False
+link_to_display = "https://dinosaur-game.onrender.com/"
+link_copied = False
 
 # Load images
 sky_surfaces = [pygame.image.load(f'graphics/Sky{i}.png').convert() for i in range(1, 5)]
@@ -372,7 +376,18 @@ while True:
                     player.sprite.gravity = -20
         elif game_state == RANKINGS_DISPLAY:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                game_state = LINK_DISPLAY
+                link_copied = False
+        elif game_state == LINK_DISPLAY:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_state = CHARACTER_SELECTION
+                link_copied = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if actual_link_rect.collidepoint(mouse_pos):
+                    pyperclip.copy(link_to_display)
+                    link_copied = True
+                
 
     if game_state == INITIAL_MENU:
         screen.fill((94, 129, 162))
@@ -449,6 +464,29 @@ while True:
         high_scores = get_high_scores()
         display_high_score(max(score['score'] for score in high_scores) if high_scores else 0)
         display_rankings(high_scores)
+    elif game_state == LINK_DISPLAY:
+        screen.fill((94, 129, 162))
+        link_surf = test_font.render('Check out the top score leaderboard:', False, (255, 255, 255))
+        link_rect = link_surf.get_rect(center=(400, 150))
+        screen.blit(link_surf, link_rect)
+
+        actual_link_surf = test_font.render(link_to_display, False, (111, 196, 169))
+        actual_link_rect = actual_link_surf.get_rect(center=(400, 200))
+        screen.blit(actual_link_surf, actual_link_rect)
+
+        # Vẽ khung viền
+        pygame.draw.rect(screen, (111, 196, 169), actual_link_rect.inflate(10, 10), 2)
+
+        if link_copied:
+            copy_surf = test_font.render('Link copied!', False, (0, 255, 0))
+        else:
+            copy_surf = test_font.render('Click to copy link', False, (255, 255, 255))
+        copy_rect = copy_surf.get_rect(center=(400, 250))
+        screen.blit(copy_surf, copy_rect)
+
+        continue_surf = test_font.render('Press SPACE to continue', False, (255, 255, 255))
+        continue_rect = continue_surf.get_rect(center=(400, 300))
+        screen.blit(continue_surf, continue_rect)
 
     pygame.display.update()
     clock.tick(60)
