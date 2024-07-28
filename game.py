@@ -22,11 +22,15 @@ CHARACTER_SELECTION = "character_selection"
 GAME_PLAYING = "game_playing"
 RANKINGS_DISPLAY = "rankings_display"
 LINK_DISPLAY = "link_display"
+GAME_PAUSED = "game_paused"
 game_state = INITIAL_MENU
 
 # Game variables
 game_active = False
+global start_time, pause_start_time, game_paused
 start_time = 0
+pause_start_time = 0
+pause_duration = 0
 score = 0
 game_speed = 6
 high_score = 0
@@ -37,6 +41,7 @@ player_name = ""
 name_input_active = False
 link_to_display = "https://dinosaur-game.onrender.com/"
 link_copied = False
+game_paused = False
 
 # Load images
 sky_surfaces = [pygame.image.load(f'graphics/Sky{i}.png').convert() for i in range(1, 5)]
@@ -45,6 +50,9 @@ start_image = pygame.image.load('graphics/start_btn.png').convert_alpha()
 exit_image = pygame.image.load('graphics/exit_btn.png').convert_alpha()
 start_image_rect = start_image.get_rect(center=(200, 200))
 exit_image_rect = exit_image.get_rect(center=(600, 200))
+pause_button = pygame.image.load('graphics/pause_btn.png').convert_alpha()
+pause_button = pygame.transform.scale(pause_button, (70, 50))
+pause_button_rect = pause_button.get_rect(topleft=(10, 20))
 
 # Load player stand images for selection
 player_stand_images = [
@@ -217,7 +225,16 @@ class Coin(pygame.sprite.Sprite):
             self.kill()
 
 def display_score():
+    global pause_start_time, start_time, game_paused
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
+    if game_paused:
+        pause_start_time = current_time
+    else:
+        if pause_start_time:
+            start_time += current_time - pause_start_time
+            pause_start_time = 0
+        current_time = int(pygame.time.get_ticks() / 1000) - start_time
+
     score_surf = test_font.render(f'Score: {current_time}', False, (64, 64, 64))
     score_rect = score_surf.get_rect(center=(400, 50))
     screen.blit(score_surf, score_rect)
@@ -349,6 +366,7 @@ while True:
                 if player_choice:
                     game_state = GAME_PLAYING
                     start_time = int(pygame.time.get_ticks() / 1000)
+                    pause_start_time = 0
                     player.add(Player(player_choice))
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for name, img, pos, required_score in player_stand_images:
@@ -359,21 +377,37 @@ while True:
                         else:
                             selection_message = f"{name} requires {required_score} points!"
         elif game_state == GAME_PLAYING:
-            if event.type == obstacle_timer:
-                obstacle_group.add(Obstacle(choice(['fly', 'spikes', 'snail', 'bee', 'worm', 'tooth'])))
-                new_timer = max(min_obstacle_timer, max_obstacle_timer - (score * 15))
-                pygame.time.set_timer(obstacle_timer, new_timer)
-            if event.type == coin_timer:
-                if random.random() < 0.05:
-                    coin_group.add(Coin('diamond'))
-                else:
-                    coin_group.add(Coin('gold'))
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if player.sprite.rect.collidepoint(event.pos) and player.sprite.rect.bottom >= 300:
+                if pause_button_rect.collidepoint(event.pos):
+                    game_paused = not game_paused
+                    if game_paused:
+                        game_state = GAME_PAUSED
+                        pause_start_time = int(pygame.time.get_ticks() / 1000)
+                    else:
+                        game_state = GAME_PLAYING
+                        pause_duration += int(pygame.time.get_ticks() / 1000) - pause_start_time
+                        pause_start_time = 0
+                elif player.sprite.rect.collidepoint(event.pos) and player.sprite.rect.bottom >= 300:
                     player.sprite.gravity = -20
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and player.sprite.rect.bottom >= 300:
                     player.sprite.gravity = -20
+            if not game_paused:
+                if event.type == obstacle_timer:
+                    obstacle_group.add(Obstacle(choice(['fly', 'spikes', 'snail', 'bee', 'worm', 'tooth'])))
+                    new_timer = max(min_obstacle_timer, max_obstacle_timer - (score * 15))
+                    pygame.time.set_timer(obstacle_timer, new_timer)
+                if event.type == coin_timer:
+                    if random.random() < 0.05:
+                        coin_group.add(Coin('diamond'))
+                    else:
+                        coin_group.add(Coin('gold'))
+        elif game_state == GAME_PAUSED:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                game_paused = False
+                game_state = GAME_PLAYING
+                start_time += int(pygame.time.get_ticks() / 1000) - pause_start_time
+                pause_start_time = 0
         elif game_state == RANKINGS_DISPLAY:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_state = LINK_DISPLAY
@@ -387,7 +421,6 @@ while True:
                 if actual_link_rect.collidepoint(mouse_pos):
                     pyperclip.copy(link_to_display)
                     link_copied = True
-                
 
     if game_state == INITIAL_MENU:
         screen.fill((94, 129, 162))
@@ -400,12 +433,12 @@ while True:
     
         prompt_width = name_prompt.get_width()
         total_width = prompt_width + name_surface.get_width()
-        start_x = (800 - total_width) // 2  # Căn giữa theo chiều ngang
+        start_x = (800 - total_width) // 2
     
         screen.blit(name_prompt, (start_x, 150))
         screen.blit(name_surface, (start_x + prompt_width, 150))
     
-        if pygame.time.get_ticks() % 1000 < 500:  # Nhấp nháy con trỏ
+        if pygame.time.get_ticks() % 1000 < 500:
             cursor_x = start_x + prompt_width + name_surface.get_width()
             pygame.draw.line(screen, (255, 255, 255), (cursor_x, 150), (cursor_x, 175), 2)
     elif game_state == CHARACTER_SELECTION:
@@ -415,7 +448,7 @@ while True:
         for _, img, pos, _ in player_stand_images:
             screen.blit(img, img.get_rect(center=pos))
 
-        score_message = test_font.render(f'High score: {score}', False, (111, 196, 169))
+        score_message = test_font.render(f'High score: {high_score}', False, (111, 196, 169))
         score_message_rect = score_message.get_rect(center=(400, 120))
         screen.blit(score_message, score_message_rect)
 
@@ -429,35 +462,47 @@ while True:
             message_rect = message_surf.get_rect(center=(400, 320))
             screen.blit(message_surf, message_rect)
     elif game_state == GAME_PLAYING:
-        screen.blit(sky_surfaces[min(score // 10, 3)], (0, 0))
-        screen.blit(ground_surface, (0, 300))
-        score = display_score()
+        if not game_paused:
+            screen.blit(sky_surfaces[min(score // 10, 3)], (0, 0))
+            screen.blit(ground_surface, (0, 300))
+            score = display_score()
 
-        player.draw(screen)
-        player.update()
+            player.draw(screen)
+            player.update()
 
-        obstacle_group.draw(screen)
-        obstacle_group.update()
+            obstacle_group.draw(screen)
+            obstacle_group.update()
 
-        coin_group.draw(screen)
-        coin_group.update()
+            coin_group.draw(screen)
+            coin_group.update()
 
-        game_active = collision_sprite()
-        collision_coin()
-        display_high_score(high_score)
+            game_active = collision_sprite()
+            collision_coin()
+            display_high_score(high_score)
+            
+            if not game_active:
+                game_state = RANKINGS_DISPLAY
+                new_score = {"player_name": player_name, "score": score}
+                rankings = [{"player_name": "Unknown", "score": s} if isinstance(s, int) else s for s in rankings]
+                rankings.append(new_score)
+                rankings.sort(key=lambda x: x["score"], reverse=True)
+                if len(rankings) > 5:
+                    rankings = rankings[:5]
+                submit_score(player_name, score)
+                high_scores = get_high_scores()
+                rankings = high_scores
+                high_score = max(high_score, score)
         
-        if not game_active:
-            game_state = RANKINGS_DISPLAY
-            new_score = {"player_name": player_name, "score": score}
-            rankings = [{"player_name": "Unknown", "score": s} if isinstance(s, int) else s for s in rankings]
-            rankings.append(new_score)
-            rankings.sort(key=lambda x: x["score"], reverse=True)
-            if len(rankings) > 5:
-                rankings = rankings[:5]
-            submit_score(player_name, score)
-            high_scores = get_high_scores()
-            rankings = high_scores
-            high_score = max(high_score, score)
+        screen.blit(pause_button, pause_button_rect)
+    elif game_state == GAME_PAUSED:
+        screen.fill((94, 129, 162))
+        pause_text = test_font.render('Game Paused', False, (111, 196, 169))
+        pause_rect = pause_text.get_rect(center=(400, 200))
+        screen.blit(pause_text, pause_rect)
+        
+        continue_text = test_font.render('Press SPACE to continue', False, (111, 196, 169))
+        continue_rect = continue_text.get_rect(center=(400, 250))
+        screen.blit(continue_text, continue_rect)
     elif game_state == RANKINGS_DISPLAY:
         screen.fill((94, 129, 162))
         add_score_to_rankings({"player_name": player_name, "score": score})
@@ -474,7 +519,6 @@ while True:
         actual_link_rect = actual_link_surf.get_rect(center=(400, 200))
         screen.blit(actual_link_surf, actual_link_rect)
 
-        # Vẽ khung viền
         pygame.draw.rect(screen, (111, 196, 169), actual_link_rect.inflate(10, 10), 2)
 
         if link_copied:
