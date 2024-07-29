@@ -10,7 +10,7 @@ pygame.init()
 screen = pygame.display.set_mode((800, 400))
 pygame.display.set_caption('Runner')
 clock = pygame.time.Clock()
-test_font = pygame.font.Font('font/Pixeltype.ttf', 50)
+test_font = pygame.font.Font('font/Pixeltype.ttf', 30)
 bg_music = pygame.mixer.Sound('audio/music.wav')
 bg_music.set_volume(0.1)
 bg_music.play(loops = -1)
@@ -42,6 +42,8 @@ name_input_active = False
 link_to_display = "https://dinosaur-game.onrender.com/"
 link_copied = False
 game_paused = False
+gold_count = 0
+diamond_count = 0
 
 # Load images
 sky_surfaces = [pygame.image.load(f'graphics/Sky{i}.png').convert() for i in range(1, 5)]
@@ -52,7 +54,13 @@ start_image_rect = start_image.get_rect(center=(200, 200))
 exit_image_rect = exit_image.get_rect(center=(600, 200))
 pause_button = pygame.image.load('graphics/pause_btn.png').convert_alpha()
 pause_button = pygame.transform.scale(pause_button, (70, 50))
-pause_button_rect = pause_button.get_rect(topleft=(10, 20))
+pause_button_rect = pause_button.get_rect(topleft=(240, 20))
+gold_icon = pygame.image.load('graphics/coin/gold.png').convert_alpha()
+gold_icon = pygame.transform.scale(gold_icon, (20, 20))  # Điều chỉnh kích thước nếu cần
+
+diamond_icon = pygame.image.load('graphics/coin/diamond.png').convert_alpha()
+diamond_icon = pygame.transform.scale(diamond_icon, (20, 20))  # Điều chỉnh kích thước nếu cần
+
 
 # Load player stand images for selection
 player_stand_images = [
@@ -236,13 +244,13 @@ def display_score():
         current_time = int(pygame.time.get_ticks() / 1000) - start_time
 
     score_surf = test_font.render(f'Score: {current_time}', False, (64, 64, 64))
-    score_rect = score_surf.get_rect(center=(400, 50))
+    score_rect = score_surf.get_rect(topright=(790, 5))
     screen.blit(score_surf, score_rect)
     return current_time
 
 def display_high_score(high_score):
     high_score_surf = test_font.render(f'High Score: {high_score}', False, (255, 255, 255))
-    high_score_rect = high_score_surf.get_rect(center=(610, 50))
+    high_score_rect = high_score_surf.get_rect(topright=(790, 30))
     screen.blit(high_score_surf, high_score_rect)
 
 def display_rankings(rankings):
@@ -276,9 +284,27 @@ def collision_sprite():
     else: return True
 
 def collision_coin():
-    global start_time
-    if pygame.sprite.spritecollide(player.sprite, coin_group, True):
-        start_time -= 2  # cộng điểm khi nhặt coin
+    global start_time, gold_count, diamond_count
+    collided_coins = pygame.sprite.spritecollide(player.sprite, coin_group, True)
+    for coin in collided_coins:
+        if coin.coin_type == 'gold':
+            gold_count += 1
+            start_time -= 2  # cộng điểm khi nhặt coin vàng
+        elif coin.coin_type == 'diamond':
+            diamond_count += 1
+            start_time -= 5  # cộng nhiều điểm hơn khi nhặt kim cương
+def display_coin_count():
+    # Hiển thị gold
+    screen.blit(gold_icon, (5, 5))
+    gold_surf = test_font.render(f': {gold_count}', False, (255, 215, 0))
+    gold_rect = gold_surf.get_rect(topleft=(30, 5))
+    screen.blit(gold_surf, gold_rect)
+
+    # Hiển thị diamond
+    screen.blit(diamond_icon, (5, 30))
+    diamond_surf = test_font.render(f': {diamond_count}', False, (255, 106, 106))
+    diamond_rect = diamond_surf.get_rect(topleft=(30, 30))
+    screen.blit(diamond_surf, diamond_rect)
 
 def save_high_scores(scores, filename='high_scores.txt'):
     with open(filename, 'w') as file:
@@ -368,6 +394,8 @@ while True:
                     start_time = int(pygame.time.get_ticks() / 1000)
                     pause_start_time = 0
                     player.add(Player(player_choice))
+                    gold_count = 0
+                    diamond_count = 0
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for name, img, pos, required_score in player_stand_images:
                     if img.get_rect(center=pos).collidepoint(event.pos):
@@ -479,6 +507,7 @@ while True:
             game_active = collision_sprite()
             collision_coin()
             display_high_score(high_score)
+            display_coin_count()
             
             if not game_active:
                 game_state = RANKINGS_DISPLAY
