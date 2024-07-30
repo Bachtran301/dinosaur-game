@@ -52,9 +52,11 @@ start_image = pygame.image.load('graphics/start_btn.png').convert_alpha()
 exit_image = pygame.image.load('graphics/exit_btn.png').convert_alpha()
 start_image_rect = start_image.get_rect(center=(200, 200))
 exit_image_rect = exit_image.get_rect(center=(600, 200))
-pause_button = pygame.image.load('graphics/pause_btn.png').convert_alpha()
-pause_button = pygame.transform.scale(pause_button, (70, 50))
-pause_button_rect = pause_button.get_rect(topleft=(240, 20))
+
+pause_button_text = test_font.render('Pause', True, (0, 0, 0))
+pause_button_rect = pygame.Rect(355, 20, pause_button_text.get_width() + 20, pause_button_text.get_height() + 10)
+pause_button_text_rect = pause_button_text.get_rect(center=pause_button_rect.center)
+
 gold_icon = pygame.image.load('graphics/coin/gold.png').convert_alpha()
 gold_icon = pygame.transform.scale(gold_icon, (20, 20))  # Điều chỉnh kích thước nếu cần
 
@@ -231,6 +233,11 @@ class Coin(pygame.sprite.Sprite):
     def destroy(self):
         if self.rect.x <= -100:
             self.kill()
+
+def draw_pause_button():
+    pygame.draw.rect(screen, (255, 255, 255), pause_button_rect)  # Draw the button rectangle
+    pygame.draw.rect(screen, (0, 0, 0), pause_button_rect, 2)  # Draw the border
+    screen.blit(pause_button_text, pause_button_text_rect)  # Draw the text
 
 def display_score():
     global pause_start_time, start_time, game_paused
@@ -521,8 +528,7 @@ while True:
                 high_scores = get_high_scores()
                 rankings = high_scores
                 high_score = max(high_score, score)
-        
-        screen.blit(pause_button, pause_button_rect)
+            draw_pause_button()  # Draw the new pause button  
     elif game_state == GAME_PAUSED:
         screen.fill((94, 129, 162))
         pause_text = test_font.render('Game Paused', False, (111, 196, 169))
