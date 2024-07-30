@@ -1,5 +1,1 @@
-{'_id': '66a855a506b8acfdd2fe84bb', 'player_name': 'ew', 'score': 19}
-{'_id': '66a8559206b8acfdd2fe84ba', 'player_name': 'ew', 'score': 12}
-{'_id': '66a7ee6fc16c37e4aa9ec772', 'player_name': ' fsdsd', 'score': 7}
-{'_id': '66a7ee9ac05f82a5142485f5', 'player_name': ' fsdsd', 'score': 5}
-{'_id': '66a7f1e3e5e4c91b366cc362', 'player_name': 'daw', 'score': 3}
+{'_id': '66a8790ccf365cd21dc6d863', 'player_name': 'dvx', 'score': 10}
