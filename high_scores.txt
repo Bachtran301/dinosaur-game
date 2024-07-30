@@ -1,1 +1,0 @@
-{'_id': '66a8790ccf365cd21dc6d863', 'player_name': 'dvx', 'score': 10}
